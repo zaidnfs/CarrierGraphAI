@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # Local apps
     "apps.accounts",
+    "apps.jobs",
 ]
 
 MIDDLEWARE = [
@@ -178,3 +179,18 @@ JOB_PROVIDERS = {
     # },
 }
 
+# Celery Beat Periodic Schedule
+CELERY_BEAT_SCHEDULE = {
+    "daily-job-ingestion": {
+        "task": "tasks.ingestion.fetch_and_store_jobs",
+        "schedule": 86400.0,  # Run daily (every 24 hours)
+        "kwargs": {
+            "max_pages_per_query": 2,
+            "auto_trigger_processing": True,
+        },
+    },
+}
+
+# NLP & Machine Learning Settings
+SPACY_MODEL = env("SPACY_MODEL", default="en_core_web_sm")
+EMBEDDING_MODEL_NAME = env("EMBEDDING_MODEL_NAME", default="all-MiniLM-L6-v2")
