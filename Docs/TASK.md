@@ -8,15 +8,15 @@
 
 ### 1.1 Project Initialization
 
-- [ ] TASK-001: Initialize Django project with split settings (base, development, production)
-- [ ] TASK-002: Configure PostgreSQL database connection
-- [ ] TASK-003: Create `accounts` app with custom User model
-- [ ] TASK-004: Set up user authentication (signup, login, logout) with DRF
-- [ ] TASK-005: Configure Celery + Redis for background task processing
-- [ ] TASK-006: Create `docker-compose.yml` for local services (PostgreSQL, Neo4j, Redis, Qdrant)
-- [ ] TASK-007: Set up `.env.example`, `.gitignore`, and initial `README.md`
-- [ ] TASK-008: Configure CORS, CSRF, and security middleware
-- [ ] TASK-009: Set up pytest and initial test configuration
+- [x] TASK-001: Initialize Django project with split settings (base, development, production)
+- [x] TASK-002: Configure PostgreSQL database connection
+- [x] TASK-003: Create `accounts` app with custom User model
+- [x] TASK-004: Set up user authentication (signup, login, logout) with DRF
+- [x] TASK-005: Configure Celery + Redis for background task processing
+- [x] TASK-006: Create `docker-compose.yml` for local services (PostgreSQL, Neo4j, Redis, Qdrant)
+- [x] TASK-007: Set up `.env.example`, `.gitignore`, and initial `README.md`
+- [x] TASK-008: Configure CORS, CSRF, and security middleware
+- [x] TASK-009: Set up pytest and initial test configuration
 
 ### 1.2 Data Ingestion Pipeline
 

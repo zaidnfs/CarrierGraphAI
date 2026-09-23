@@ -6,9 +6,9 @@
 
 ## Current Status
 
-**Phase:** Pre-development — Project documentation and planning.
+**Phase:** Phase 1: Project Setup & Data Ingestion Pipeline.
 
-**Active Task:** None yet. Awaiting completion of documentation setup and TASK-001.
+**Active Task:** Phase 1.1 Complete. Ready for Phase 1.2 Data Ingestion Pipeline (TASK-010).
 
 ---
 
@@ -27,18 +27,27 @@
 - [x] Created `TEST_PLAN.md` — Testing methodology and test cases.
 - [x] Created `SECURITY.md` — Security requirements and threat checklist.
 - [x] Created `DECISIONS.md` — Architecture Decision Records.
+- [x] TASK-001: Initialized Django 5.1 backend with split settings (base, development, production).
+- [x] TASK-002: Configured PostgreSQL database connection with dj-database-url (and SQLite fallback).
+- [x] TASK-003: Created `accounts` app with custom User model (email, first_name, last_name, timestamps).
+- [x] TASK-004: Implemented JWT authentication (signup, login, token refresh, logout/blacklist, me) with DRF + SimpleJWT.
+- [x] TASK-005: Configured Celery 5.6 + Redis with django-celery-results.
+- [x] TASK-006: Created `docker-compose.yml` for PostgreSQL, Neo4j, Redis, and Qdrant.
+- [x] TASK-007: Configured `.env.example`, `.env`, `.gitignore`, and project setup.
+- [x] TASK-008: Configured CORS, CSRF, and security middleware for Vite frontend (`localhost:5173`).
+- [x] TASK-009: Configured pytest-django and wrote 11 unit tests covering all auth flows (100% passing).
 
 ---
 
 ## Current Task
 
-Awaiting start of **TASK-001**: Initialize Django project with split settings.
+Phase 1.1 completed. Ready to start **TASK-010**: Create Adzuna API client (`services/adzuna_client.py`).
 
 ---
 
 ## Known Issues
 
-- None yet. Project has not entered development phase.
+- None. All 11 pytest unit tests pass cleanly.
 
 ---
 
@@ -50,11 +59,10 @@ Awaiting start of **TASK-001**: Initialize Django project with split settings.
 
 ## Next Steps
 
-1. Complete all documentation files in `Docs/`.
-2. Create `README.md` in project root.
-3. Create `.env.example` in project root.
-4. Create `.gitignore` in project root.
-5. Begin **Phase 1 — Project Setup**: TASK-001 through TASK-009.
+1. Start **Phase 1.2 — Data Ingestion Pipeline**:
+   - TASK-010: Create Adzuna API client (`services/adzuna_client.py`)
+   - TASK-011: Define job posting Django model (PostgreSQL) for raw storage
+   - TASK-012: Implement scheduled Celery task to fetch job postings from Adzuna
 
 ---
 
