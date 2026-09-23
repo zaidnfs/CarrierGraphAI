@@ -159,3 +159,22 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+
+# Job Data Providers Configuration
+JOB_PROVIDERS = {
+    "adzuna": {
+        "enabled": True,
+        "priority": 1,
+        "app_id": env("ADZUNA_APP_ID", default=""),
+        "app_key": env("ADZUNA_APP_KEY", default=""),
+        "default_country": "in",
+        "rate_limit_per_minute": 25,
+    },
+    # Future providers (e.g., Reed, Jooble) can be enabled here:
+    # "reed": {
+    #     "enabled": False,
+    #     "priority": 2,
+    #     "api_key": env("REED_API_KEY", default=""),
+    # },
+}
+
