@@ -175,6 +175,8 @@ Use **React 18 with TypeScript**, built via **Vite**, with **shadcn/ui** (built 
 **Key choices:**
 - **Vite** over Next.js — Django handles all backend concerns; a client-side SPA is sufficient and simpler.
 - **shadcn/ui** over MUI/Chakra/Ant Design — Components are copy-pasted into the project (not an npm dependency), giving full control over styling and behavior. Built on accessible Radix UI primitives. Uses Tailwind CSS which aligns with the project's design token system.
+- **React Bits** (reactbits.dev) — 200+ animated, interactive micro-interaction components for visual polish (copy-paste model, like shadcn/ui).
+- **Libraries.dev** — Production-ready visual effect libraries (Beam, Orb, Gooey, Metal, Image) installed via npm for premium UI effects.
 - **TypeScript** — Type safety across the frontend, better DX, catches errors at compile time.
 
 **Consequences:**

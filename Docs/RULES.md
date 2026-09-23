@@ -85,8 +85,10 @@ This file is the AI coding rulebook for SkillBridge AI. Every AI agent and devel
 ## UI / Frontend Rules
 
 - Follow `DESIGN.md` for all visual decisions — colors, typography, spacing, components.
-- **Use shadcn/ui components** as the base for all UI elements (Button, Card, Input, Badge, Dialog, etc.).
-- **Do not install alternative component libraries** (MUI, Chakra, Ant Design, etc.).
+- **Use shadcn/ui components** as the base for all standard UI elements (Button, Card, Input, Badge, Dialog, etc.).
+- **Use React Bits** ([reactbits.dev](https://reactbits.dev)) for animated micro-interactions, text effects, and interactive components.
+- **Use Libraries.dev** ([libraries.dev](https://libraries.dev)) effects (Beam, Orb, Gooey, Metal) for premium visual polish.
+- **Do not install alternative full component libraries** (MUI, Chakra, Ant Design, etc.) — shadcn/ui + React Bits + Libraries.dev cover all needs.
 - Use the **`cn()` utility** for conditional class merging — never build manual className strings.
 - **All API calls go through `services/`** — no direct `fetch()` or `axios` calls in components.
 - Use **React hooks** (`useState`, `useEffect`, custom hooks in `hooks/`) for state management.

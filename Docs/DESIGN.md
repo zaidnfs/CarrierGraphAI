@@ -12,7 +12,9 @@ This design system is implemented using **shadcn/ui** (built on Radix UI primiti
 
 - **Design tokens** (colors, spacing, radii, shadows) are defined as CSS custom properties in the global stylesheet and mapped to the Tailwind config via `tailwind.config.ts`.
 - **shadcn/ui components** (Button, Card, Input, Badge, Dialog, Select, Tabs, Toast, etc.) are the building blocks for all UI. They live in `frontend/src/components/ui/` and are fully owned by the project.
-- **Custom components** compose shadcn/ui primitives — do not build raw HTML/CSS equivalents when a shadcn/ui component exists.
+- **React Bits** ([reactbits.dev](https://reactbits.dev)) components provide animated, interactive micro-interactions (text animations, scroll effects, animated backgrounds, etc.) for visual polish.
+- **Libraries.dev** ([libraries.dev](https://libraries.dev)) provides production-ready visual effect libraries (Beam, Orb, Gooey, Metal, Image) for premium UI effects.
+- **Custom components** compose shadcn/ui primitives and React Bits / Libraries.dev effects — do not build raw HTML/CSS equivalents when a component from these sources exists.
 - Use the **`cn()` utility** (from `frontend/src/lib/utils.ts`) for conditional class merging.
 
 ---

@@ -87,6 +87,8 @@ Django Returns Response to User
 |---|---|---|
 | **Frontend** | React 18 + TypeScript (Vite) | Single-page application, user interface |
 | **UI Components** | shadcn/ui (Radix UI + Tailwind CSS) | Accessible, customizable component library |
+| **Animations & Effects** | React Bits (reactbits.dev) | 200+ animated, interactive micro-interaction components |
+| **Visual Effects** | Libraries.dev (Beam, Orb, Gooey, Metal) | Production-ready WebGL/CSS visual effect libraries |
 | **Styling** | Tailwind CSS 3.4 | Utility-first CSS framework |
 | **Backend Framework** | Django + Django REST Framework | API, auth, views, business logic |
 | **Task Queue** | Celery + Redis | Scheduled data ingestion, background AI tasks |

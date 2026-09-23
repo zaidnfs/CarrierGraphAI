@@ -22,6 +22,8 @@ SkillBridge AI is a career intelligence platform that ingests live job-market da
 |---|---|
 | Frontend | React 18 + TypeScript (Vite) |
 | UI Components | shadcn/ui (Radix UI + Tailwind CSS) |
+| Animations & Effects | React Bits (reactbits.dev) |
+| Visual Effects | Libraries.dev (Beam, Orb, Gooey, Metal) |
 | Styling | Tailwind CSS 3.4 |
 | Backend | Django + Django REST Framework |
 | Task Queue | Celery + Redis |
