@@ -20,12 +20,12 @@
 
 ### 1.2 Data Ingestion Pipeline
 
-- [ ] TASK-010: Create Adzuna API client (`services/adzuna_client.py`)
-- [ ] TASK-011: Define job posting Django model (PostgreSQL) for raw storage
-- [ ] TASK-012: Implement scheduled Celery task to fetch job postings from Adzuna
-- [ ] TASK-013: Implement spaCy NER pipeline for skill/role extraction (`services/ner_service.py`)
-- [ ] TASK-014: Create sentence-transformer embedding generation service (`services/embedding_service.py`)
-- [ ] TASK-015: Write unit tests for Adzuna client and NER extraction
+- [x] TASK-010: Create modular job data provider layer (`services/job_providers/` with `JobDataProvider` ABC, `AdzunaProvider`, `JobDataService` facade, and `schemas.py`)
+- [x] TASK-011: Define job posting Django model (PostgreSQL) for raw storage
+- [x] TASK-012: Implement scheduled Celery task to fetch job postings from Adzuna
+- [x] TASK-013: Implement spaCy NER pipeline for skill/role extraction (`services/ner_service.py`)
+- [x] TASK-014: Create sentence-transformer embedding generation service (`services/embedding_service.py`)
+- [x] TASK-015: Write unit tests for Adzuna client and NER extraction
 
 ### 1.3 Knowledge Graph & Vector Store
 

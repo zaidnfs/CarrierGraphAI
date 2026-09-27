@@ -102,7 +102,7 @@ Django Returns Response to User
 | **Resume Generation** | python-docx / ReportLab | ATS-friendly DOCX/PDF output |
 | **STT (stretch)** | Whisper | Speech-to-text for voice mock interviews |
 | **TTS (stretch)** | Piper / Coqui TTS | Text-to-speech for voice mock interviews |
-| **Job Data API** | Adzuna (free tier) | Live job market data source |
+| **Job Data API** | Modular Job Providers (Adzuna, extensible) | Multi-provider job market data sources (Provider pattern) |
 | **Deployment** | HuggingFace Spaces (free tier) | Hosting the demo application |
 | **Version Control** | Git + GitHub | Source code management |
 | **CI / Scheduling** | GitHub Actions | Automated data refresh jobs |
@@ -145,8 +145,14 @@ Final-Year-project/
 │   │   └── skills/              # Skill-gap analysis, learning resources
 │   │
 │   ├── services/
-│   │   ├── adzuna_client.py     # Adzuna API integration
+│   │   ├── job_providers/       # Modular provider layer (Strategy/Facade pattern)
+│   │   │   ├── base.py          # JobDataProvider ABC contract
+│   │   │   ├── adzuna.py        # Adzuna API provider implementation
+│   │   │   ├── schemas.py       # Normalized JobListing, SalaryEstimate dataclasses
+│   │   │   ├── service.py       # JobDataService facade & multi-provider aggregator
+│   │   │   └── exceptions.py    # Domain-specific provider exceptions
 │   │   ├── graph_service.py     # Neo4j graph operations
+
 │   │   ├── vector_service.py    # Qdrant/ChromaDB operations
 │   │   ├── llm_service.py       # Ollama LLM interaction
 │   │   ├── agent_service.py     # LangGraph agent orchestration

@@ -186,3 +186,28 @@ Use **React 18 with TypeScript**, built via **Vite**, with **shadcn/ui** (built 
 - shadcn/ui components are owned by the project (copied into `src/components/ui/`), not installed as a dependency — updates are manual but intentional.
 - Clear API contract between frontend and backend enforced by DRF serializers.
 - Frontend and backend can be developed and tested independently.
+
+---
+
+## ADR-010: Provider/Strategy Pattern for Modular Job Market Ingestion
+
+**Date:** 2026-09-23
+
+**Status:** Accepted (Extends and modularizes ADR-004)
+
+**Context:**
+ADR-004 selected the Adzuna API as the primary job market data source. However, directly coupling application services, Celery tasks, and AI retrieval agents to Adzuna's specific request/response schema would create technical debt and vendor lock-in. As the platform grows, we may need to switch providers, add secondary providers (e.g., Reed, Jooble, Indeed), or aggregate results across multiple platforms simultaneously.
+
+**Decision:**
+Implement a **Provider / Strategy pattern** in `services/job_providers/`:
+- **`JobDataProvider` (ABC):** An abstract contract defining `search_jobs()`, `get_salary_data()`, `get_categories()`, and `health_check()`.
+- **Normalized Data Schemas:** `JobListing` and `SalaryEstimate` dataclasses provide a uniform data representation regardless of source, with built-in deduplication keys.
+- **`AdzunaProvider`:** Concrete implementation of the contract for the Adzuna API using `httpx`.
+- **`JobDataService` (Facade & Aggregator):** Orchestrates active providers based on priority, fans out searches, provides graceful degradation on provider failures, deduplicates cross-provider results, and offers a singleton factory (`get_job_service()`).
+- **Configuration-Driven:** Providers are enabled and prioritized via Django `settings.JOB_PROVIDERS`.
+
+**Consequences:**
+- Consumer code (Celery ingestion tasks, DRF views, LangGraph agents) is 100% provider-agnostic.
+- Adding a new job API requires only adding a new provider subclass and configuration entry — zero consumer code changes.
+- Enables multi-provider aggregation and cross-platform deduplication out of the box.
+- Greatly simplifies unit testing via mock providers without external network dependencies.
