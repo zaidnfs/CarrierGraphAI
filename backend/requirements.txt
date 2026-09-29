@@ -28,3 +28,6 @@ spacy>=3.8,<4.0
 sentence-transformers>=3.0,<4.0
 numpy>=1.26,<3.0
 
+# Knowledge Graph & Vector Store
+neo4j>=5.15,<6.0
+qdrant-client>=1.7,<2.0

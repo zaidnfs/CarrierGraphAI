@@ -194,3 +194,16 @@ CELERY_BEAT_SCHEDULE = {
 # NLP & Machine Learning Settings
 SPACY_MODEL = env("SPACY_MODEL", default="en_core_web_sm")
 EMBEDDING_MODEL_NAME = env("EMBEDDING_MODEL_NAME", default="all-MiniLM-L6-v2")
+
+# Knowledge Graph (Neo4j) Settings
+NEO4J_URI = env("NEO4J_URI", default="bolt://localhost:7687")
+NEO4J_USER = env("NEO4J_USER", default="neo4j")
+NEO4J_PASSWORD = env("NEO4J_PASSWORD", default="neo4j_dev_pass")
+NEO4J_DATABASE = env("NEO4J_DATABASE", default="neo4j")
+NEO4J_MAX_CONNECTION_POOL_SIZE = env.int("NEO4J_MAX_CONNECTION_POOL_SIZE", default=50)
+
+# Vector Store (Qdrant) Settings
+QDRANT_URL = env("QDRANT_URL", default="http://localhost:6333")
+QDRANT_API_KEY = env("QDRANT_API_KEY", default="")
+QDRANT_COLLECTION_NAME = env("QDRANT_COLLECTION_NAME", default="job_postings")
+QDRANT_IN_MEMORY = env.bool("QDRANT_IN_MEMORY", default=False)

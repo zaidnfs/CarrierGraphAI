@@ -24,3 +24,7 @@ CELERY_TASK_EAGER_PROPAGATES = True
 
 # In-memory email backend
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+
+# Knowledge Graph & Vector Store test overrides
+NEO4J_URI = "bolt://localhost:7687"
+QDRANT_IN_MEMORY = True
