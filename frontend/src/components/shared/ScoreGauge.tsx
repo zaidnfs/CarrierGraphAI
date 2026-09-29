@@ -46,20 +46,20 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   // Determine color and category label based on DESIGN.md thresholds
   let strokeColor = '#EF4444'; // Low match (<40)
   let categoryLabel = 'Low Match';
-  let badgeBg = 'bg-danger/10 text-danger border-danger/30';
+  let badgeStyle = 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30';
 
   if (score >= 80) {
-    strokeColor = '#10B981'; // Excellent match (>=80)
+    strokeColor = '#00A264'; // Excellent match (>=80) - Jade Emerald
     categoryLabel = 'Excellent Match';
-    badgeBg = 'bg-success/10 text-success border-success/30';
+    badgeStyle = 'bg-[rgba(0,136,85,0.12)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border-[rgba(0,162,100,0.35)]';
   } else if (score >= 60) {
-    strokeColor = '#3B82F6'; // Good match (60-79)
+    strokeColor = '#0284C7'; // Good match (60-79) - Cyan/Teal
     categoryLabel = 'Good Match';
-    badgeBg = 'bg-info/10 text-info border-info/30';
+    badgeStyle = 'bg-sky-500/10 text-sky-800 dark:text-sky-300 border-sky-500/30';
   } else if (score >= 40) {
-    strokeColor = '#F59E0B'; // Partial match (40-59)
+    strokeColor = '#D97706'; // Partial match (40-59) - Amber
     categoryLabel = 'Partial Match';
-    badgeBg = 'bg-warning/10 text-warning border-warning/30';
+    badgeStyle = 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30';
   }
 
   return (
@@ -73,7 +73,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
             r={radius}
             stroke="currentColor"
             strokeWidth={strokeWidth}
-            className="text-muted/40"
+            className="text-neutral-200 dark:text-white/10"
             fill="transparent"
           />
           {/* Animated score stroke */}
@@ -93,10 +93,10 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
 
         {/* Centered score number */}
         <div className="absolute flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold tracking-tight text-foreground font-mono">
+          <span className="text-3xl font-bold tracking-tight text-[#004D2F] dark:text-white font-mono">
             {animatedScore}
           </span>
-          <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider">
+          <span className="text-[10px] uppercase font-semibold text-neutral-500 dark:text-neutral-400 tracking-wider">
             Fit Score
           </span>
         </div>
@@ -105,8 +105,8 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
       {showLabel && (
         <span
           className={cn(
-            'mt-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border',
-            badgeBg
+            'mt-3 inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border',
+            badgeStyle
           )}
         >
           {categoryLabel}

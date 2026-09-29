@@ -24,12 +24,18 @@ const config: Config = {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
-          hover: '#4F46E5',
-          light: '#EEF2FF',
+          hover: '#00A264',
+          light: '#EEF7F1',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+        },
+        emerald: {
+          forest: '#004D2F',
+          vibrant: '#008855',
+          jade: '#00A264',
+          mint: '#4CD681',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',

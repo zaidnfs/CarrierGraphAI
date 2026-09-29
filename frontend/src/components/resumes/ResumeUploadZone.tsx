@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, FileText, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { UploadCloud, AlertCircle, Loader2 } from 'lucide-react';
+import { ReiconAtsDoc } from '@/components/icons/Reicon';
 import { resumeService } from '@/services/resumeService';
 import { ResumeSummary } from '@/types/resumes';
 
@@ -84,8 +84,8 @@ export const ResumeUploadZone: React.FC<ResumeUploadZoneProps> = ({ onUploadSucc
         onClick={() => fileInputRef.current?.click()}
         className={`relative flex flex-col items-center justify-center p-8 sm:p-10 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
           isDragging
-            ? 'border-primary bg-primary/5 scale-[1.01]'
-            : 'border-border/80 bg-card hover:bg-muted/30 hover:border-primary/50'
+            ? 'border-[rgba(0,162,100,0.8)] bg-[rgba(0,77,47,0.08)] dark:bg-[rgba(0,77,47,0.3)] scale-[1.01]'
+            : 'border-[rgba(0,162,100,0.3)] bg-card hover:bg-[rgba(0,77,47,0.04)] dark:hover:bg-[rgba(0,77,47,0.2)] hover:border-[rgba(0,162,100,0.5)]'
         }`}
       >
         <input
@@ -97,35 +97,35 @@ export const ResumeUploadZone: React.FC<ResumeUploadZoneProps> = ({ onUploadSucc
           disabled={isUploading}
         />
 
-        <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-3">
+        <div className="h-12 w-12 rounded-lg bg-[rgba(0,136,85,0.1)] dark:bg-[rgba(0,77,47,0.4)] text-[#008855] dark:text-[rgba(76,214,129,1)] flex items-center justify-center mb-3">
           {isUploading ? (
             <Loader2 className="h-6 w-6 animate-spin" />
           ) : (
-            <UploadCloud className="h-6 w-6" />
+            <ReiconAtsDoc size={24} strokeWidth={2} />
           )}
         </div>
 
         <div className="text-center space-y-1">
-          <p className="text-sm font-semibold text-foreground">
+          <p className="text-sm font-semibold text-[#004D2F] dark:text-white">
             {isUploading ? 'Parsing Technical Skills via NER...' : 'Click or drag your resume to upload'}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Supports PDF and DOCX files up to 5MB
           </p>
         </div>
 
         <div className="mt-4 flex items-center gap-2">
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-muted text-muted-foreground">
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-white/10">
             PDF
           </span>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-muted text-muted-foreground">
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-white/10">
             DOCX
           </span>
         </div>
       </div>
 
       {uploadError && (
-        <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs flex items-start gap-2">
+        <div className="p-3.5 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-start gap-2">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <span>{uploadError}</span>
         </div>

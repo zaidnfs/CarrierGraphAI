@@ -21,14 +21,14 @@ export const GradientText: React.FC<GradientTextProps> = ({
   };
 
   return (
-    <div className={`relative mx-auto flex max-w-fit flex-row items-center justify-center font-bold ${className}`}>
+    <span className={`relative inline-flex max-w-fit flex-row items-center justify-center font-bold ${className}`}>
       {showBorder && (
-        <div
+        <span
           className="absolute inset-0 block h-full w-full animate-gradient bg-cover bg-[length:300%_100%] rounded-lg p-[1px] opacity-70"
           style={gradientStyle}
         >
-          <div className="h-full w-full rounded-lg bg-white dark:bg-[#060B08]" />
-        </div>
+          <span className="block h-full w-full rounded-lg bg-white dark:bg-[#060B08]" />
+        </span>
       )}
       <span
         className="relative z-10 inline-block bg-cover bg-[length:300%_100%] bg-clip-text text-transparent animate-gradient"
@@ -36,6 +36,6 @@ export const GradientText: React.FC<GradientTextProps> = ({
       >
         {children}
       </span>
-    </div>
+    </span>
   );
 };

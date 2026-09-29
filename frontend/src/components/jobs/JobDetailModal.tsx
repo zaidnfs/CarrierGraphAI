@@ -7,9 +7,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Building2, MapPin, ExternalLink, FileText, CheckCircle2 } from 'lucide-react';
+import { ReiconAtsDoc } from '@/components/icons/Reicon';
 import { useNavigate } from 'react-router-dom';
 
 interface JobDetailModalProps {
@@ -29,16 +28,24 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, isOpen, onC
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader className="space-y-2 border-b border-border pb-4">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto border border-[rgba(0,162,100,0.25)] bg-background">
+        <DialogHeader className="space-y-2 border-b border-border/70 pb-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="default">{job.category || job.extracted_role || 'Job Posting'}</Badge>
-            {job.is_remote && <Badge variant="secondary">Remote</Badge>}
+            <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-semibold bg-[rgba(0,136,85,0.12)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border border-[rgba(0,162,100,0.3)]">
+              {job.category || job.extracted_role || 'Job Posting'}
+            </span>
+            {job.is_remote && (
+              <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-semibold bg-sky-500/10 text-sky-800 dark:text-sky-300 border border-sky-500/30">
+                Remote
+              </span>
+            )}
           </div>
-          <DialogTitle className="text-xl font-bold">{job.title}</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-[#004D2F] dark:text-white">
+            {job.title}
+          </DialogTitle>
           <DialogDescription className="flex flex-wrap items-center gap-4 text-xs">
-            <span className="flex items-center gap-1 text-foreground font-medium">
-              <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="flex items-center gap-1.5 text-foreground font-medium">
+              <Building2 className="h-3.5 w-3.5 text-[#008855] dark:text-[rgba(76,214,129,1)]" />
               {job.company}
             </span>
             <span className="flex items-center gap-1">
@@ -46,7 +53,7 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, isOpen, onC
               {job.location_city || 'India'}
             </span>
             {(job.salary_min || job.salary_max) && (
-              <span className="font-mono text-success font-semibold">
+              <span className="font-mono text-[#008855] dark:text-[rgba(76,214,129,1)] font-semibold">
                 {job.currency} {job.salary_min?.toLocaleString()} - {job.salary_max?.toLocaleString()}
               </span>
             )}
@@ -56,16 +63,19 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, isOpen, onC
         <div className="space-y-6 py-2">
           {/* Extracted Skills Section */}
           <div className="space-y-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
               Required & Extracted Skills (spaCy NER)
             </h4>
             <div className="flex flex-wrap gap-1.5">
               {job.extracted_skills && job.extracted_skills.length > 0 ? (
                 job.extracted_skills.map((skill) => (
-                  <Badge key={skill} variant="outline" className="bg-primary/5 text-primary border-primary/20">
-                    <CheckCircle2 className="h-3 w-3 mr-1 text-primary" />
+                  <span
+                    key={skill}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-[rgba(0,136,85,0.08)] dark:bg-[rgba(0,77,47,0.3)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border border-[rgba(0,162,100,0.3)]"
+                  >
+                    <CheckCircle2 className="h-3 w-3 text-[#008855] dark:text-[rgba(76,214,129,1)]" />
                     {skill}
-                  </Badge>
+                  </span>
                 ))
               ) : (
                 <span className="text-xs text-muted-foreground italic">No specific skills extracted.</span>
@@ -75,10 +85,10 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, isOpen, onC
 
           {/* Description Section */}
           <div className="space-y-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
               Job Description
             </h4>
-            <div className="text-sm text-foreground/90 whitespace-pre-line leading-relaxed max-h-72 overflow-y-auto p-4 rounded-lg bg-muted/30 border border-border/60">
+            <div className="text-sm text-[#0A1A12] dark:text-[#EDF2EE] whitespace-pre-line leading-relaxed max-h-72 overflow-y-auto p-4 rounded-lg bg-muted/30 border border-border/60">
               {job.description || 'No detailed description provided by the job provider.'}
             </div>
           </div>
@@ -86,17 +96,25 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, isOpen, onC
           {/* Action buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border">
             {job.source_url && (
-              <Button variant="ghost" size="sm" asChild className="text-xs">
-                <a href={job.source_url} target="_blank" rel="noopener noreferrer">
-                  View on {job.source_provider || 'Adzuna'} <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
-              </Button>
+              <a
+                href={job.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+              >
+                <span>View on {job.source_provider || 'Adzuna'}</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
             )}
 
-            <Button onClick={handleAnalyze} className="w-full sm:w-auto">
-              <FileText className="h-4 w-4 mr-2" />
-              Compare with My Resume
-            </Button>
+            <button
+              type="button"
+              onClick={handleAnalyze}
+              className="w-full sm:w-auto h-10 px-4 rounded-lg text-xs font-bold text-[#003822] bg-[rgba(76,214,129,1)] hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(76,214,129,0.3)] ml-auto"
+            >
+              <ReiconAtsDoc size={14} strokeWidth={2} />
+              <span>Compare with My Resume</span>
+            </button>
           </div>
         </div>
       </DialogContent>

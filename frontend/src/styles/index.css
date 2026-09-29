@@ -6,65 +6,65 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;      /* #F8FAFC */
-    --foreground: 222 47% 11%;      /* #0F172A */
+    --background: 140 14% 97.5%;     /* #F8FAF8 */
+    --foreground: 157 55% 8%;        /* #0A1A12 */
 
-    --card: 0 0% 100%;              /* #FFFFFF */
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%;               /* #FFFFFF */
+    --card-foreground: 157 55% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 157 55% 8%;
 
-    --primary: 239 84% 67%;          /* #6366F1 */
+    --primary: 158 100% 27%;         /* #008855 Vibrant Emerald */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 258 90% 66%;        /* #8B5CF6 */
+    --secondary: 157 100% 15%;       /* #004D2F Deep Forest */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%; /* #64748B */
+    --muted: 145 25% 94%;            /* #EEF7F1 */
+    --muted-foreground: 155 18% 38%; /* #4F6A5B Crisp Accessible Dark Muted */
 
-    --accent: 239 84% 97%;
-    --accent-foreground: 239 84% 67%;
+    --accent: 145 40% 93%;
+    --accent-foreground: 158 100% 27%;
 
-    --destructive: 0 84.2% 60.2%;   /* #EF4444 */
+    --destructive: 0 84.2% 60.2%;    /* #EF4444 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;          /* #E2E8F0 */
-    --input: 214 32% 91%;
-    --ring: 239 84% 67%;
+    --border: 150 25% 88%;           /* #D6E8DD Crisp Emerald Hairline */
+    --input: 150 25% 88%;
+    --ring: 157 100% 32%;            /* #00A264 Bright Jade */
 
-    --radius: 0.5rem;               /* 8px */
+    --radius: 0.5rem;                /* 8px Sleek Rounded Rectangles */
   }
 
   .dark {
-    --background: 222 47% 11%;      /* #0F172A */
-    --foreground: 210 40% 96%;      /* #F1F5F9 */
+    --background: 144 38% 3.5%;      /* #060B08 Obsidian Emerald */
+    --foreground: 135 15% 94%;       /* #EDF2EE */
 
-    --card: 217 33% 17%;            /* #1E293B */
-    --card-foreground: 210 40% 96%;
+    --card: 145 32% 6.5%;            /* #09150E */
+    --card-foreground: 135 15% 94%;
 
-    --popover: 217 33% 17%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 145 32% 6.5%;
+    --popover-foreground: 135 15% 94%;
 
-    --primary: 239 84% 67%;          /* #6366F1 */
-    --primary-foreground: 0 0% 100%;
+    --primary: 139 64% 57%;          /* #4CD681 Luminous Mint */
+    --primary-foreground: 157 100% 11%; /* #003822 */
 
-    --secondary: 258 90% 66%;        /* #8B5CF6 */
+    --secondary: 158 100% 27%;       /* #008855 Vibrant Emerald */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 145 30% 9%;
+    --muted-foreground: 140 10% 65%; /* #9EAEA3 */
 
-    --accent: 217.2 32.6% 25%;
-    --accent-foreground: 210 40% 96%;
+    --accent: 157 100% 15%;          /* #004D2F */
+    --accent-foreground: 139 64% 57%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 96%;
 
-    --border: 215 28% 21%;          /* #334155 */
-    --input: 215 28% 21%;
-    --ring: 239 84% 67%;
+    --border: 157 40% 16%;           /* #0F3322 */
+    --input: 157 40% 16%;
+    --ring: 157 100% 32%;            /* #00A264 */
   }
 }
 

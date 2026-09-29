@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react';
+import { KoboyoSparkle, KoboyoEditorialPerson } from '@/components/icons/Koboyo';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,10 +14,16 @@ export const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const fillDemoAccount = () => {
+    setEmail('demo@skillbridge.ai');
+    setPassword('password123');
+    setErrorMessage(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setErrorMessage('Please provide both email and password.');
+      setErrorMessage('Please enter your email and password.');
       return;
     }
 
@@ -33,7 +37,7 @@ export const LoginPage: React.FC = () => {
       const detail =
         err.response?.data?.detail ||
         err.response?.data?.error ||
-        'Invalid email or password. Please try again.';
+        'Invalid email or password. Please verify and try again.';
       setErrorMessage(detail);
     } finally {
       setIsLoading(false);
@@ -41,92 +45,223 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary/5 via-background to-background p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Brand header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-secondary text-white shadow-lg shadow-primary/25 mb-1">
-            <Sparkles className="h-6 w-6" />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome to SkillBridge AI</h1>
-          <p className="text-sm text-muted-foreground">Sign in to access your GraphRAG career dashboard</p>
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[#FBFBFA] dark:bg-[#080D0A] text-[#111111] dark:text-[#EDF2EE] font-sans selection:bg-[rgba(76,214,129,0.25)]">
+      {/* =========================================================================
+          LEFT 55% PANEL: Editorial Minimalist Brand & Person Line Art
+          ========================================================================= */}
+      <div className="hidden lg:flex lg:w-[55%] relative overflow-hidden bg-[#0A100C] text-white p-12 xl:p-16 flex-col justify-between border-r border-neutral-800/80 select-none">
+        {/* Subtle, restrained ambient light spot */}
+        <div
+          className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-[160px] pointer-events-none opacity-20"
+          style={{
+            background: 'radial-gradient(circle, rgba(76, 214, 129, 0.6) 0%, rgba(0, 162, 100, 0.2) 60%, transparent 80%)',
+          }}
+        />
+
+        {/* Top Header / Minimalist Brand */}
+        <div className="relative z-10 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="h-8 w-8 rounded-lg bg-[rgba(76,214,129,1)] flex items-center justify-center text-[#004D2F] font-semibold">
+              <KoboyoSparkle size={16} strokeWidth={2} />
+            </div>
+            <span className="font-semibold tracking-tight text-base text-white">
+              SkillBridge <span className="font-mono text-xs text-[rgba(76,214,129,1)]">AI</span>
+            </span>
+          </Link>
+
+          <span className="text-[11px] font-mono text-neutral-400">
+            v2.3
+          </span>
         </div>
 
-        {/* Login Card */}
-        <Card className="border-border/80 shadow-lg shadow-black/5">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl">Sign in</CardTitle>
-            <CardDescription>Enter your email and password to continue</CardDescription>
-          </CardHeader>
+        {/* Center: Handcrafted Koboyo Person Line Art + Editorial Typography */}
+        <div className="relative z-10 my-auto py-12 max-w-md space-y-8">
+          {/* Koboyo Minimalist Person SVG Icon */}
+          <div className="relative w-fit">
+            <div className="h-24 w-24 rounded-xl border border-neutral-800 bg-[#0E1712] flex items-center justify-center text-[rgba(76,214,129,0.9)]">
+              <KoboyoEditorialPerson size={64} strokeWidth={1.5} />
+            </div>
+          </div>
 
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              {errorMessage && (
-                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-start gap-2">
-                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
+          {/* Editorial Headline & Concise Reassurance */}
+          <div className="space-y-3">
+            <h1 className="text-3xl xl:text-4xl font-semibold tracking-[-0.03em] text-white leading-[1.18]">
+              Placement intelligence, <br />
+              grounded in evidence.
+            </h1>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground" htmlFor="email">
-                  Email Address
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="student@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                  autoFocus
-                />
-              </div>
+            <p className="text-sm text-neutral-400 leading-relaxed max-w-sm">
+              Map your skills directly to live industry requirements. Calibrated against thousands of verified engineering job postings.
+            </p>
+          </div>
 
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="text-xs font-semibold text-foreground" htmlFor="password">
-                    Password
-                  </label>
-                </div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    autoComplete="current-password"
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-            </CardContent>
+          {/* Minimalist Bento Status Card */}
+          <div className="p-4 rounded-lg border border-neutral-800/80 bg-[#0E1712]/60 flex items-center justify-between text-xs font-mono">
+            <span className="text-neutral-400 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[rgba(76,214,129,1)]" />
+              GraphRAG Reasoning Engine
+            </span>
+            <span className="text-[11px] px-2 py-0.5 rounded bg-[rgba(0,77,47,0.4)] text-[rgba(76,214,129,1)] border border-[rgba(0,162,100,0.3)]">
+              Active
+            </span>
+          </div>
+        </div>
 
-            <CardFooter className="flex flex-col space-y-4 pt-2">
-              <Button type="submit" className="w-full" isLoading={isLoading}>
-                Sign In
-              </Button>
+        {/* Bottom Minimalist Footer */}
+        <div className="relative z-10 pt-6 border-t border-neutral-900 flex items-center justify-between text-xs font-mono text-neutral-400">
+          <span>SkillBridge AI © 2026</span>
+          <span className="text-neutral-400">Student Placement System</span>
+        </div>
+      </div>
 
-              <p className="text-center text-xs text-muted-foreground">
-                Don&apos;t have an account?{' '}
-                <Link to="/signup" className="text-primary font-semibold hover:underline">
-                  Create an account
-                </Link>
+      {/* =========================================================================
+          RIGHT 45% PANEL: Precision, High-Density Utilitarian Form
+          ========================================================================= */}
+      <div className="flex-1 lg:w-[45%] flex flex-col justify-between p-6 sm:p-10 md:p-12 xl:p-16">
+        {/* Mobile Header (Visible below 1024px) */}
+        <div className="lg:hidden flex items-center justify-between pb-6 border-b border-neutral-200 dark:border-neutral-800">
+          <Link to="/" className="flex items-center gap-2 font-semibold text-base">
+            <div className="h-7 w-7 rounded-lg bg-[rgba(76,214,129,1)] flex items-center justify-center text-[#004D2F]">
+              <KoboyoSparkle size={14} />
+            </div>
+            <span>SkillBridge AI</span>
+          </Link>
+          <Link
+            to="/signup"
+            className="text-xs font-mono px-2.5 py-1 rounded border border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-300"
+          >
+            Register
+          </Link>
+        </div>
+
+        <div className="my-auto max-w-sm w-full mx-auto space-y-6 pt-4 sm:pt-0">
+          {/* Form Header */}
+          <div className="space-y-1.5">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-[#111111] dark:text-white">
+              Sign in
+            </h2>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              Enter your credentials to continue, or{' '}
+              <Link to="/signup" className="text-[#008855] dark:text-[rgba(76,214,129,1)] font-medium hover:underline underline-offset-2">
+                create an account
+              </Link>
+            </p>
+          </div>
+
+          {/* Quick Demo Credentials Box */}
+          <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-[#F7F6F3] dark:bg-white/[0.03] flex items-center justify-between gap-3 text-xs">
+            <div className="space-y-0.5 min-w-0">
+              <span className="font-medium text-[#111111] dark:text-neutral-200 block text-[11px] uppercase tracking-wider font-mono">
+                Test Account
+              </span>
+              <p className="text-[11px] text-neutral-500 font-mono truncate">
+                demo@skillbridge.ai • password123
               </p>
-            </CardFooter>
+            </div>
+            <button
+              type="button"
+              onClick={fillDemoAccount}
+              className="px-2.5 py-1 rounded-md text-xs font-medium bg-white dark:bg-neutral-800 text-[#111111] dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 active:scale-[0.98] transition-all shrink-0 cursor-pointer"
+            >
+              Fill Demo
+            </button>
+          </div>
+
+          {/* Error Banner */}
+          {errorMessage && (
+            <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-300 text-xs flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          {/* Sign In Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label
+                htmlFor="email"
+                className="text-xs font-medium text-neutral-700 dark:text-neutral-300 block"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                required
+                autoComplete="email"
+                autoFocus
+                className="w-full h-10 px-3 rounded-lg text-sm border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-[#0D1410] text-[#111111] dark:text-[#EDF2EE] placeholder:text-neutral-400 focus:outline-none focus:border-[#008855] dark:focus:border-[rgba(76,214,129,1)] focus:ring-1 focus:ring-[#008855] dark:focus:ring-[rgba(76,214,129,1)] transition-colors"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center">
+                <label
+                  htmlFor="password"
+                  className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                >
+                  Password
+                </label>
+                <span className="text-[11px] text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 cursor-pointer">
+                  Forgot?
+                </span>
+              </div>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className="w-full h-10 px-3 pr-9 rounded-lg text-sm border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-[#0D1410] text-[#111111] dark:text-[#EDF2EE] placeholder:text-neutral-400 focus:outline-none focus:border-[#008855] dark:focus:border-[rgba(76,214,129,1)] focus:ring-1 focus:ring-[#008855] dark:focus:ring-[rgba(76,214,129,1)] transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2.5 top-2.5 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer"
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Primary Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full h-10 rounded-lg text-sm font-semibold transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer mt-2 bg-[#004D2F] dark:bg-[rgba(76,214,129,1)] text-white dark:text-[#003822] hover:bg-[#003822] dark:hover:brightness-105"
+            >
+              {isLoading ? (
+                <>
+                  <span className="h-3.5 w-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign in</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
           </form>
-        </Card>
+        </div>
+
+        {/* Footer */}
+        <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 text-center text-xs text-neutral-500 font-mono flex items-center justify-between">
+          <span>SkillBridge AI</span>
+          <div className="flex items-center gap-3">
+            <Link to="/design" className="hover:text-foreground">Preview</Link>
+            <span>•</span>
+            <Link to="/signup" className="hover:text-foreground">Register</Link>
+          </div>
+        </div>
       </div>
     </div>
   );
