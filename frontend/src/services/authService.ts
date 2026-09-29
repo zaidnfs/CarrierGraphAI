@@ -4,20 +4,24 @@ import { AuthResponse, LoginPayload, RegisterPayload, User } from '../types/auth
 export const authService = {
   async login(payload: LoginPayload): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>('/auth/login/', payload);
-    const { tokens } = response.data;
-    if (tokens?.access) {
-      setStoredTokens(tokens.access, tokens.refresh);
+    const data = response.data;
+    const access = data.access || data.tokens?.access;
+    const refresh = data.refresh || data.tokens?.refresh;
+    if (access) {
+      setStoredTokens(access, refresh);
     }
-    return response.data;
+    return data;
   },
 
   async register(payload: RegisterPayload): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>('/auth/register/', payload);
-    const { tokens } = response.data;
-    if (tokens?.access) {
-      setStoredTokens(tokens.access, tokens.refresh);
+    const data = response.data;
+    const access = data.access || data.tokens?.access;
+    const refresh = data.refresh || data.tokens?.refresh;
+    if (access) {
+      setStoredTokens(access, refresh);
     }
-    return response.data;
+    return data;
   },
 
   async getCurrentUser(): Promise<User> {

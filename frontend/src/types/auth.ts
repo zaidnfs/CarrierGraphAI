@@ -3,6 +3,7 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
+  full_name?: string;
   role?: string;
   created_at?: string;
 }
@@ -13,8 +14,11 @@ export interface AuthTokens {
 }
 
 export interface AuthResponse {
-  tokens: AuthTokens;
+  access?: string;
+  refresh?: string;
   user: User;
+  message?: string;
+  tokens?: AuthTokens;
 }
 
 export interface LoginPayload {
