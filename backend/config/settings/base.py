@@ -207,3 +207,10 @@ QDRANT_URL = env("QDRANT_URL", default="http://localhost:6333")
 QDRANT_API_KEY = env("QDRANT_API_KEY", default="")
 QDRANT_COLLECTION_NAME = env("QDRANT_COLLECTION_NAME", default="job_postings")
 QDRANT_IN_MEMORY = env.bool("QDRANT_IN_MEMORY", default=False)
+
+# LLM (Ollama) & Agent Settings
+OLLAMA_BASE_URL = env("OLLAMA_BASE_URL", default="http://localhost:11434")
+OLLAMA_MODEL = env("OLLAMA_MODEL", default="llama3.1")
+OLLAMA_TIMEOUT = env.float("OLLAMA_TIMEOUT", default=30.0)
+LLM_FALLBACK_MODE = env.bool("LLM_FALLBACK_MODE", default=True)
+PROMPTS_DIR = BASE_DIR / "prompts"

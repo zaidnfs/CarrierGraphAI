@@ -28,3 +28,7 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 # Knowledge Graph & Vector Store test overrides
 NEO4J_URI = "bolt://localhost:7687"
 QDRANT_IN_MEMORY = True
+
+# LLM test overrides
+LLM_FALLBACK_MODE = True
+OLLAMA_TIMEOUT = 0.5

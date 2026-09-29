@@ -19,6 +19,25 @@ from .vector_service import (
     get_vector_service,
 )
 
+from .llm_service import (
+    LLMService,
+    LLMServiceError,
+    LLMTimeoutError,
+    LLMConnectionError,
+    get_llm_service,
+)
+from .retrievers import (
+    GraphRetriever,
+    get_graph_retriever,
+    VectorRetriever,
+    get_vector_retriever,
+)
+from .agent_service import (
+    AgentService,
+    AgentState,
+    get_agent_service,
+)
+
 __all__ = [
     "get_job_service",
     "NERService",
@@ -34,4 +53,16 @@ __all__ = [
     "VectorServiceError",
     "VectorConnectionError",
     "get_vector_service",
+    "LLMService",
+    "LLMServiceError",
+    "LLMTimeoutError",
+    "LLMConnectionError",
+    "get_llm_service",
+    "GraphRetriever",
+    "get_graph_retriever",
+    "VectorRetriever",
+    "get_vector_retriever",
+    "AgentService",
+    "AgentState",
+    "get_agent_service",
 ]

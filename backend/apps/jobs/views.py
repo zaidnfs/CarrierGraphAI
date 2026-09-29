@@ -2,11 +2,21 @@
 DRF Views for JobPostings.
 Provides public listing, searching, filtering, and retrieval endpoints.
 """
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework import generics, status, views
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from django.db.models import Q
 from .models import JobPosting
-from .serializers import JobPostingListSerializer, JobPostingDetailSerializer
+from .serializers import (
+    JobPostingListSerializer,
+    JobPostingDetailSerializer,
+    JobMarketQuerySerializer,
+    JobMarketQueryResponseSerializer,
+)
+from services import get_agent_service
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class JobPostingListView(generics.ListAPIView):
@@ -60,3 +70,32 @@ class JobPostingDetailView(generics.RetrieveAPIView):
     serializer_class = JobPostingDetailSerializer
     queryset = JobPosting.objects.all()
     lookup_field = "id"
+
+
+class JobMarketQueryView(views.APIView):
+    """
+    Protected endpoint to query the job market using the LangGraph agent.
+    Requires JWT authentication.
+    POST /api/v1/jobs/query/
+    Body: {"query": "What are the most demanded skills for Python Backend Developer?"}
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = JobMarketQuerySerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        query = serializer.validated_data["query"]
+        agent = get_agent_service()
+
+        try:
+            result = agent.run_query(query=query)
+            return Response(result, status=status.HTTP_200_OK)
+        except Exception as exc:
+            logger.error("JobMarketQueryView error processing query '%s': %s", query, exc)
+            return Response(
+                {"error": "Agent query processing failed.", "details": str(exc)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

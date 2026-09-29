@@ -31,3 +31,7 @@ numpy>=1.26,<3.0
 # Knowledge Graph & Vector Store
 neo4j>=5.15,<6.0
 qdrant-client>=1.7,<2.0
+
+# AI & Agentic Orchestration
+langgraph>=0.2.0,<0.3.0
+langchain-core>=0.3.0,<0.4.0

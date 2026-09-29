@@ -62,3 +62,32 @@ class JobPostingDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+
+class JobMarketQuerySerializer(serializers.Serializer):
+    """
+    Serializer for natural language queries directed at the agentic query system.
+    """
+
+    query = serializers.CharField(
+        required=True,
+        max_length=500,
+        allow_blank=False,
+        error_messages={
+            "blank": "Query string cannot be empty.",
+            "required": "Query string is required.",
+        },
+    )
+
+
+class JobMarketQueryResponseSerializer(serializers.Serializer):
+    """
+    Serializer for the agentic query response payload.
+    """
+
+    query = serializers.CharField()
+    strategy = serializers.CharField()
+    response = serializers.CharField()
+    sources = serializers.ListField(child=serializers.DictField(), required=False)
+    entities = serializers.DictField(required=False)
+    confidence = serializers.FloatField(required=False)
