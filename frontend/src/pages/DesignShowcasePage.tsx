@@ -12,13 +12,44 @@ import {
   Star,
   Database,
   Palette,
+  RefreshCw,
+  Sliders,
+  Layers,
+  Activity,
+  Code2,
 } from 'lucide-react';
 
+// Dynamic React Bits Components
+import { SpotlightCard } from '../components/reactbits/SpotlightCard';
+import { DecryptedText } from '../components/reactbits/DecryptedText';
+import { GradientText } from '../components/reactbits/GradientText';
+import { Magnet } from '../components/reactbits/Magnet';
+import { AnimatedNumber } from '../components/reactbits/AnimatedNumber';
+
+// Handcrafted Modern Icons (Reicon & Koboyo)
+import {
+  ReiconGraph,
+  ReiconRadar,
+  ReiconAtsDoc,
+  ReiconTerminal,
+  ReiconShieldCheck,
+  ReiconTrending,
+  ReiconCpu,
+} from '../components/icons/Reicon';
+
+import {
+  KoboyoSparkle,
+  KoboyoBrain,
+  KoboyoTarget,
+  KoboyoBadge,
+  KoboyoCheck,
+} from '../components/icons/Koboyo';
+
 // Exact Palette provided by User:
-// Color 1: rgba(0, 77, 47, 1)   - Deep Forest Emerald (#004D2F) -> High contrast headings, dark accents, solid borders
-// Color 2: rgba(0, 136, 85, 1)  - Vibrant Emerald     (#008855) -> Secondary CTAs, active highlights, badge accents
-// Color 3: rgba(0, 162, 100, 1) - Bright Jade Green   (#00A264) -> Borders, focus rings, tag outlines
-// Color 4: rgba(76, 214, 129, 1)- Luminous Mint Green (#4CD681) -> Dark mode glowing accent, gauges, luminous badges
+// Color 1: rgba(0, 77, 47, 1)   - Deep Forest Emerald (#004D2F)
+// Color 2: rgba(0, 136, 85, 1)  - Vibrant Emerald     (#008855)
+// Color 3: rgba(0, 162, 100, 1) - Bright Jade Green   (#00A264)
+// Color 4: rgba(76, 214, 129, 1)- Luminous Mint Green (#4CD681)
 
 const PALETTE = [
   { name: 'Deep Forest', rgba: 'rgba(0, 77, 47, 1)', hex: '#004D2F', role: 'Primary Text in Light Mode, Dark Buttons & Surfaces' },
@@ -29,10 +60,18 @@ const PALETTE = [
 
 export const DesignShowcasePage: React.FC = () => {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [segmentedTab, setSegmentedTab] = useState<'overview' | 'api' | 'components'>('overview');
+  const [segmentedTab, setSegmentedTab] = useState<'overview' | 'dynamic' | 'icons'>('overview');
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
+  const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
   const [queryInput, setQueryInput] = useState('What backend skills are most in demand in Bengaluru?');
   const [queryStrategy, setQueryStrategy] = useState<'hybrid' | 'graph' | 'vector'>('hybrid');
+
+  // Interactive Dynamic States
+  const [decryptKey, setDecryptKey] = useState<number>(0);
+  const [sandboxDecryptText, setSandboxDecryptText] = useState<string>('Neo4j Knowledge Graph Calibrated');
+  const [sandboxDecryptKey, setSandboxDecryptKey] = useState<number>(0);
+  const [iconStroke, setIconStroke] = useState<number>(1.75);
+  const [iconSize, setIconSize] = useState<number>(24);
 
   const isDark = theme === 'dark';
 
@@ -40,6 +79,12 @@ export const DesignShowcasePage: React.FC = () => {
     navigator.clipboard.writeText(text);
     setCopiedColor(text);
     setTimeout(() => setCopiedColor(null), 1800);
+  };
+
+  const copyIconName = (name: string) => {
+    navigator.clipboard.writeText(name);
+    setCopiedIcon(name);
+    setTimeout(() => setCopiedIcon(null), 1800);
   };
 
   return (
@@ -59,7 +104,7 @@ export const DesignShowcasePage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="h-8 w-8 rounded-lg bg-[rgba(76,214,129,1)] flex items-center justify-center text-[#004D2F] font-bold shadow-[0_0_18px_rgba(76,214,129,0.4)]">
-              <Sparkles className="h-4 w-4" />
+              <KoboyoSparkle size={18} strokeWidth={2.2} />
             </div>
             <span className="font-bold tracking-tight text-base flex items-center gap-2">
               SkillBridge{' '}
@@ -125,7 +170,7 @@ export const DesignShowcasePage: React.FC = () => {
           isDark ? 'text-neutral-400' : 'text-[#004D2F]'
         }`}>
           <Palette className={`h-4 w-4 ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'}`} />
-          <span>Active 4-Color Palette (Click to copy):</span>
+          <span>Active 4-Tone Emerald Palette:</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -175,7 +220,7 @@ export const DesignShowcasePage: React.FC = () => {
         />
 
         <div className="max-w-5xl mx-auto text-center space-y-6 relative z-10">
-          {/* Eyebrow Badge */}
+          {/* Eyebrow Badge with Koboyo Hand-drawn Sparkle */}
           <div
             className={`inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-semibold tracking-wide border shadow-sm transition-all ${
               isDark
@@ -183,7 +228,7 @@ export const DesignShowcasePage: React.FC = () => {
                 : 'bg-white border-[rgba(0,136,85,0.25)] text-[#004D2F]'
             }`}
           >
-            <span className="h-2 w-2 rounded-full bg-[rgba(76,214,129,1)] animate-pulse" />
+            <KoboyoSparkle size={14} className={isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'} />
             <span className="font-mono text-[11px] uppercase tracking-wider font-bold">
               Grounded Career Intelligence Engine
             </span>
@@ -195,23 +240,24 @@ export const DesignShowcasePage: React.FC = () => {
             </span>
           </div>
 
-          {/* Main Title */}
+          {/* Main Title with React Bits Animated GradientText */}
           <h1
             className={`text-4xl sm:text-6xl md:text-7xl font-semibold tracking-[-2px] leading-[1.05] max-w-4xl mx-auto ${
               isDark ? 'text-white' : 'text-[#004D2F]'
             }`}
           >
             Placement intelligence grounded in{' '}
-            <span
-              className="text-transparent bg-clip-text"
-              style={{
-                backgroundImage: isDark
-                  ? 'linear-gradient(135deg, rgba(76, 214, 129, 1) 0%, rgba(0, 162, 100, 1) 60%, rgba(0, 136, 85, 1) 100%)'
-                  : 'linear-gradient(135deg, #004D2F 0%, #008855 50%, #00A264 100%)',
-              }}
+            <GradientText
+              colors={
+                isDark
+                  ? ['#4CD681', '#00A264', '#008855', '#4CD681']
+                  : ['#004D2F', '#008855', '#00A264', '#004D2F']
+              }
+              animationSpeed={5}
+              className="inline-block"
             >
               live market graphs
-            </span>
+            </GradientText>
             .
           </h1>
 
@@ -224,29 +270,33 @@ export const DesignShowcasePage: React.FC = () => {
             Transform raw job postings into queryable knowledge graphs. Calibrate your resume with objective fit scoring and export optimized ATS DOCX resumes.
           </p>
 
-          {/* Sleek Rectangular Buttons in Palette Colors */}
+          {/* Sleek Rectangular Buttons with React Bits Magnet Pull */}
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            {/* Luminous Mint Button */}
-            <button
-              className="rounded-lg px-6 py-3 text-sm font-bold text-[#003822] transition-all hover:brightness-105 active:scale-[0.98] flex items-center gap-2 shadow-[0_0_24px_rgba(76,214,129,0.35)]"
-              style={{ backgroundColor: 'rgba(76, 214, 129, 1)' }}
-            >
-              <span>Explore GraphRAG Query</span>
-              <ArrowRight className="h-4 w-4" />
-            </button>
+            {/* Luminous Mint Button with Magnet */}
+            <Magnet padding={45} magnetStrength={2.5}>
+              <button
+                className="rounded-lg px-6 py-3 text-sm font-bold text-[#003822] transition-all hover:brightness-105 active:scale-[0.98] flex items-center gap-2 shadow-[0_0_24px_rgba(76,214,129,0.35)] cursor-pointer"
+                style={{ backgroundColor: 'rgba(76, 214, 129, 1)' }}
+              >
+                <span>Explore GraphRAG Query</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </Magnet>
 
-            {/* Deep Forest Emerald Button */}
-            <button
-              className="rounded-lg px-6 py-3 text-sm font-semibold transition-all active:scale-[0.98] border shadow-sm flex items-center gap-2"
-              style={{
-                backgroundColor: isDark ? 'rgba(0, 77, 47, 0.45)' : 'rgba(0, 77, 47, 1)',
-                borderColor: 'rgba(0, 162, 100, 0.45)',
-                color: isDark ? 'rgba(76, 214, 129, 1)' : '#FFFFFF',
-              }}
-            >
-              <FileText className="h-4 w-4" />
-              <span>Analyze Resume</span>
-            </button>
+            {/* Deep Forest Emerald Button with Magnet */}
+            <Magnet padding={45} magnetStrength={2.5}>
+              <button
+                className="rounded-lg px-6 py-3 text-sm font-semibold transition-all active:scale-[0.98] border shadow-sm flex items-center gap-2 cursor-pointer"
+                style={{
+                  backgroundColor: isDark ? 'rgba(0, 77, 47, 0.45)' : 'rgba(0, 77, 47, 1)',
+                  borderColor: 'rgba(0, 162, 100, 0.45)',
+                  color: isDark ? 'rgba(76, 214, 129, 1)' : '#FFFFFF',
+                }}
+              >
+                <ReiconAtsDoc size={16} strokeWidth={2} />
+                <span>Analyze Resume</span>
+              </button>
+            </Magnet>
 
             {/* Vibrant Emerald Outline Button */}
             <button
@@ -261,7 +311,7 @@ export const DesignShowcasePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Level 3 Mockup Frame — GraphRAG Terminal */}
+        {/* Level 3 Mockup Frame — GraphRAG Terminal with React Bits DecryptedText */}
         <div className="max-w-5xl mx-auto mt-12 relative z-10">
           <div
             className={`rounded-xl border overflow-hidden transition-all shadow-[0_24px_48px_-8px_rgba(0,0,0,0.35)] ${
@@ -313,7 +363,7 @@ export const DesignShowcasePage: React.FC = () => {
                   <label className={`text-xs font-semibold uppercase tracking-wider font-mono flex items-center gap-2 ${
                     isDark ? 'text-neutral-400' : 'text-[#004D2F]'
                   }`}>
-                    <Database className={`h-3.5 w-3.5 ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'}`} />
+                    <ReiconTerminal size={15} strokeWidth={2} className={isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'} />
                     Market Query Terminal
                   </label>
                   <div className="flex gap-1.5">
@@ -388,7 +438,7 @@ export const DesignShowcasePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Synthesized Output in Palette Accents */}
+              {/* Synthesized Output with React Bits DecryptedText Effect */}
               <div
                 className={`p-5 rounded-lg border font-mono text-xs leading-relaxed space-y-3 ${
                   isDark
@@ -400,18 +450,39 @@ export const DesignShowcasePage: React.FC = () => {
                   <span className={`text-[11px] font-bold flex items-center gap-1.5 ${
                     isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
                   }`}>
-                    <Zap className="h-3.5 w-3.5" /> LangGraph Hybrid Strategy Synthesis
+                    <Zap className="h-3.5 w-3.5" />
+                    <DecryptedText
+                      text="LangGraph Hybrid Strategy Synthesis"
+                      triggerKey={decryptKey}
+                      speed={35}
+                      maxIterations={12}
+                      className={isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'}
+                    />
                   </span>
-                  <span className={`text-[10px] font-mono ${isDark ? 'text-neutral-400' : 'text-neutral-600 font-semibold'}`}>
-                    Retrieval latency: 380ms
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setDecryptKey((prev) => prev + 1)}
+                      title="Re-run React Bits Decrypt Animation"
+                      className={`text-[10px] px-2 py-0.5 rounded border flex items-center gap-1 font-mono transition-all hover:scale-105 ${
+                        isDark
+                          ? 'border-white/10 text-neutral-400 hover:text-white hover:border-[rgba(76,214,129,0.4)]'
+                          : 'border-neutral-300 text-neutral-700 hover:text-[#004D2F] hover:border-[rgba(0,136,85,0.4)]'
+                      }`}
+                    >
+                      <RefreshCw className="h-3 w-3" />
+                      <span>Re-Decrypt</span>
+                    </button>
+                    <span className={`text-[10px] font-mono ${isDark ? 'text-neutral-400' : 'text-neutral-600 font-semibold'}`}>
+                      Latency: 380ms
+                    </span>
+                  </div>
                 </div>
 
                 <p className={`text-sm leading-relaxed font-sans ${isDark ? 'text-neutral-200' : 'text-[#0F291B]'}`}>
                   Across <strong>1,240+ verified tech postings</strong> in Bengaluru, <strong>Python</strong> leads backend demand with a <strong>68.4%</strong> presence rate, predominantly paired with <strong>FastAPI</strong>, <strong>PostgreSQL</strong>, and <strong>Docker</strong>.
                 </p>
 
-                {/* Grounded Entity Chips */}
+                {/* Grounded Entity Chips wrapped in React Bits SpotlightCard */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
                   {[
                     { skill: 'Python', role: 'Role: Backend', match: '94% Co-occurrence' },
@@ -419,8 +490,10 @@ export const DesignShowcasePage: React.FC = () => {
                     { skill: 'Docker', role: 'DevOps: Container', match: '76% Co-occurrence' },
                     { skill: 'FastAPI', role: 'Framework: REST', match: '69% Co-occurrence' },
                   ].map((item) => (
-                    <div
+                    <SpotlightCard
                       key={item.skill}
+                      spotlightColor={isDark ? 'rgba(76, 214, 129, 0.22)' : 'rgba(0, 162, 100, 0.15)'}
+                      spotlightSize={200}
                       className={`p-3 rounded-md border ${
                         isDark
                           ? 'bg-[rgba(0,77,47,0.2)] border-[rgba(0,162,100,0.25)]'
@@ -442,7 +515,7 @@ export const DesignShowcasePage: React.FC = () => {
                       }`}>
                         {item.match}
                       </div>
-                    </div>
+                    </SpotlightCard>
                   ))}
                 </div>
               </div>
@@ -473,7 +546,7 @@ export const DesignShowcasePage: React.FC = () => {
 
           {/* Underline Tabs */}
           <div className="flex items-center gap-6 text-sm">
-            {(['overview', 'api', 'components'] as const).map((tab) => (
+            {(['overview', 'dynamic', 'icons'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setSegmentedTab(tab)}
@@ -487,364 +560,711 @@ export const DesignShowcasePage: React.FC = () => {
                     : 'text-neutral-600 hover:text-[#004D2F]'
                 }`}
               >
-                {tab}
+                {tab === 'dynamic' ? 'React Bits Playground' : tab === 'icons' ? 'Reicon & Koboyo Icons' : 'Overview Bento'}
               </button>
             ))}
           </div>
         </div>
 
-        {/* 3-Column Bento Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Card 1: Resume Match Calibration */}
-          <div
-            className={`lg:col-span-4 rounded-xl border p-6 flex flex-col justify-between transition-all ${
-              isDark
-                ? 'bg-[#09150E] border-[rgba(0,162,100,0.22)]'
-                : 'bg-white border-[rgba(0,136,85,0.22)] shadow-xs'
-            }`}
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className={`text-xs font-semibold uppercase tracking-wider font-mono ${
-                  isDark ? 'text-neutral-400' : 'text-[#004D2F]'
-                }`}>
-                  Fit Score Calibration
-                </span>
-                <span
-                  className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold border font-mono"
-                  style={{
-                    backgroundColor: isDark ? 'rgba(0, 77, 47, 0.3)' : 'rgba(0, 136, 85, 0.1)',
-                    borderColor: isDark ? 'rgba(0, 162, 100, 0.4)' : 'rgba(0, 136, 85, 0.3)',
-                    color: isDark ? 'rgba(76, 214, 129, 1)' : '#004D2F',
-                  }}
-                >
-                  ATS Verified
-                </span>
-              </div>
-
-              {/* Gauge Display with Palette Stroke */}
-              <div className="flex flex-col items-center justify-center my-6">
-                <div className="relative flex items-center justify-center w-36 h-36">
-                  <svg className="w-36 h-36 rotate-[-90deg]">
-                    <circle
-                      cx="72"
-                      cy="72"
-                      r="60"
-                      stroke="currentColor"
-                      strokeWidth="10"
-                      className={isDark ? 'text-[#0C2014]' : 'text-neutral-100'}
-                      fill="transparent"
-                    />
-                    <circle
-                      cx="72"
-                      cy="72"
-                      r="60"
-                      stroke={isDark ? 'rgba(76, 214, 129, 1)' : 'rgba(0, 162, 100, 1)'}
-                      strokeWidth="10"
-                      strokeDasharray="377"
-                      strokeDashoffset="45"
-                      strokeLinecap="round"
-                      fill="transparent"
-                      className="transition-all duration-1000 ease-out"
-                    />
-                  </svg>
-                  <div className="absolute flex flex-col items-center">
-                    <span className={`text-4xl font-bold font-mono tracking-tight ${
-                      isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
-                    }`}>
-                      88
-                    </span>
-                    <span className={`text-[10px] uppercase font-semibold tracking-wider ${
-                      isDark ? 'text-neutral-400' : 'text-neutral-600'
-                    }`}>
-                      Fit Score
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-4 text-center">
+        {/* Dynamic Tab Conditionals */}
+        {segmentedTab === 'overview' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Card 1: Resume Match Calibration with SpotlightCard & AnimatedNumber */}
+            <SpotlightCard
+              spotlightColor={isDark ? 'rgba(76, 214, 129, 0.18)' : 'rgba(0, 162, 100, 0.12)'}
+              className={`lg:col-span-4 rounded-xl border p-6 flex flex-col justify-between transition-all ${
+                isDark
+                  ? 'bg-[#09150E] border-[rgba(0,162,100,0.22)]'
+                  : 'bg-white border-[rgba(0,136,85,0.22)] shadow-xs'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className={`text-xs font-semibold uppercase tracking-wider font-mono ${
+                    isDark ? 'text-neutral-400' : 'text-[#004D2F]'
+                  }`}>
+                    Fit Score Calibration
+                  </span>
                   <span
-                    className="inline-block px-3 py-1 rounded-md text-xs font-semibold border"
+                    className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold border font-mono"
                     style={{
-                      backgroundColor: isDark ? 'rgba(0, 77, 47, 0.35)' : 'rgba(0, 136, 85, 0.12)',
+                      backgroundColor: isDark ? 'rgba(0, 77, 47, 0.3)' : 'rgba(0, 136, 85, 0.1)',
                       borderColor: isDark ? 'rgba(0, 162, 100, 0.4)' : 'rgba(0, 136, 85, 0.3)',
                       color: isDark ? 'rgba(76, 214, 129, 1)' : '#004D2F',
                     }}
                   >
-                    Excellent Match (Tier 1)
+                    ATS Verified
                   </span>
-                  <p className={`text-xs mt-2 max-w-[240px] ${
-                    isDark ? 'text-neutral-400' : 'text-neutral-600'
+                </div>
+
+                {/* Gauge Display with Palette Stroke & AnimatedNumber */}
+                <div className="flex flex-col items-center justify-center my-6">
+                  <div className="relative flex items-center justify-center w-36 h-36">
+                    <svg className="w-36 h-36 rotate-[-90deg]">
+                      <circle
+                        cx="72"
+                        cy="72"
+                        r="60"
+                        stroke="currentColor"
+                        strokeWidth="10"
+                        className={isDark ? 'text-[#0C2014]' : 'text-neutral-100'}
+                        fill="transparent"
+                      />
+                      <circle
+                        cx="72"
+                        cy="72"
+                        r="60"
+                        stroke={isDark ? 'rgba(76, 214, 129, 1)' : 'rgba(0, 162, 100, 1)'}
+                        strokeWidth="10"
+                        strokeDasharray="377"
+                        strokeDashoffset="45"
+                        strokeLinecap="round"
+                        fill="transparent"
+                        className="transition-all duration-1000 ease-out"
+                      />
+                    </svg>
+                    <div className="absolute flex flex-col items-center">
+                      <span className={`text-4xl font-bold font-mono tracking-tight ${
+                        isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                      }`}>
+                        <AnimatedNumber value={88} duration={1400} />
+                      </span>
+                      <span className={`text-[10px] uppercase font-semibold tracking-wider ${
+                        isDark ? 'text-neutral-400' : 'text-neutral-600'
+                      }`}>
+                        Fit Score
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 text-center">
+                    <span
+                      className="inline-block px-3 py-1 rounded-md text-xs font-semibold border"
+                      style={{
+                        backgroundColor: isDark ? 'rgba(0, 77, 47, 0.35)' : 'rgba(0, 136, 85, 0.12)',
+                        borderColor: isDark ? 'rgba(0, 162, 100, 0.4)' : 'rgba(0, 136, 85, 0.3)',
+                        color: isDark ? 'rgba(76, 214, 129, 1)' : '#004D2F',
+                      }}
+                    >
+                      Excellent Match (Tier 1)
+                    </span>
+                    <p className={`text-xs mt-2 max-w-[240px] ${
+                      isDark ? 'text-neutral-400' : 'text-neutral-600'
+                    }`}>
+                      Candidate profile matches 8 out of 9 technical requirements for <strong className={isDark ? 'text-white' : 'text-[#004D2F]'}>Senior Python Engineer</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Matched vs Skill Gaps */}
+                <div className={`space-y-3 pt-4 border-t ${isDark ? 'border-white/10' : 'border-neutral-200'}`}>
+                  <div className={`text-xs font-semibold ${isDark ? 'text-neutral-400' : 'text-[#004D2F]'}`}>
+                    Matched Skills (8)
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {['Python', 'Django', 'FastAPI', 'PostgreSQL', 'Docker', 'REST API', 'Redis'].map((s) => (
+                      <span
+                        key={s}
+                        className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md font-mono"
+                        style={{
+                          backgroundColor: isDark ? 'rgba(0, 77, 47, 0.25)' : 'rgba(0, 136, 85, 0.08)',
+                          borderColor: isDark ? 'rgba(0, 162, 100, 0.3)' : 'rgba(0, 136, 85, 0.25)',
+                          color: isDark ? 'rgba(76, 214, 129, 1)' : '#004D2F',
+                          borderWidth: '1px',
+                        }}
+                      >
+                        <Check className={`h-3 w-3 ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'}`} />
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className={`text-xs font-semibold pt-2 ${isDark ? 'text-neutral-400' : 'text-[#004D2F]'}`}>
+                    Identified Skill Gap (1)
+                  </div>
+                  <div>
+                    <span className={`inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md font-mono border ${
+                      isDark
+                        ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        : 'bg-amber-50 text-amber-900 border-amber-300 font-semibold'
+                    }`}>
+                      <Zap className="h-3 w-3" />
+                      Kubernetes (Curated Learning Resource in Phase 3)
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6">
+                <Magnet padding={30} magnetStrength={3} wrapperClassName="w-full">
+                  <button
+                    className="w-full rounded-lg py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                    style={{
+                      backgroundColor: 'rgba(76, 214, 129, 1)',
+                      color: '#003B24',
+                    }}
+                  >
+                    <ReiconAtsDoc size={15} strokeWidth={2} />
+                    Generate Tailored ATS Resume (.docx)
+                  </button>
+                </Magnet>
+              </div>
+            </SpotlightCard>
+
+            {/* Card 2: Live Opportunity Match with Reicon Icons */}
+            <SpotlightCard
+              spotlightColor={isDark ? 'rgba(0, 162, 100, 0.2)' : 'rgba(0, 136, 85, 0.12)'}
+              className={`lg:col-span-4 rounded-xl border p-6 flex flex-col justify-between transition-all ${
+                isDark
+                  ? 'bg-[#09150E] border-[rgba(0,162,100,0.22)]'
+                  : 'bg-white border-[rgba(0,136,85,0.22)] shadow-xs'
+              }`}
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className={`text-xs font-semibold uppercase tracking-wider font-mono ${
+                    isDark ? 'text-neutral-400' : 'text-[#004D2F]'
                   }`}>
-                    Candidate profile matches 8 out of 9 technical requirements for <strong className={isDark ? 'text-white' : 'text-[#004D2F]'}>Senior Python Engineer</strong>.
+                    Live Placement Match
+                  </span>
+                  <span className={`text-[11px] font-mono ${isDark ? 'text-neutral-400' : 'text-neutral-500 font-semibold'}`}>
+                    ID: job-5481
+                  </span>
+                </div>
+
+                <div
+                  className={`p-4 rounded-lg border space-y-3 ${
+                    isDark
+                      ? 'bg-[#050D08] border-[rgba(0,162,100,0.2)]'
+                      : 'bg-[#F2FAF5] border-[rgba(0,136,85,0.2)]'
+                  }`}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span
+                        className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded inline-flex items-center gap-1"
+                        style={{
+                          backgroundColor: isDark ? 'rgba(0, 77, 47, 0.4)' : 'rgba(0, 136, 85, 0.12)',
+                          color: isDark ? 'rgba(76, 214, 129, 1)' : '#004D2F',
+                        }}
+                      >
+                        <ReiconRadar size={11} strokeWidth={2} />
+                        Full-Time
+                      </span>
+                      <h3 className={`font-semibold text-base mt-2 ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
+                        Staff Platform Engineer
+                      </h3>
+                      <p className={`text-xs font-mono mt-0.5 ${isDark ? 'text-neutral-400' : 'text-neutral-600'}`}>
+                        Razorpay • Bengaluru, IN (Hybrid)
+                      </p>
+                    </div>
+                    <span className={`font-mono text-xs font-bold ${
+                      isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                    }`}>
+                      ₹28L - ₹36L
+                    </span>
+                  </div>
+
+                  <p className={`text-xs leading-relaxed line-clamp-3 ${
+                    isDark ? 'text-neutral-300' : 'text-[#1C3829]'
+                  }`}>
+                    Building distributed transaction routing engines using high-throughput async Python microservices, Neo4j knowledge graph indexing, and container orchestration.
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {['Python', 'AsyncIO', 'Neo4j', 'Redis', 'Docker'].map((sk) => (
+                      <span
+                        key={sk}
+                        className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
+                          isDark
+                            ? 'bg-[rgba(0,77,47,0.2)] border-[rgba(0,162,100,0.25)] text-neutral-200'
+                            : 'bg-white border-[rgba(0,136,85,0.2)] text-[#004D2F] font-semibold'
+                        }`}
+                      >
+                        {sk}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Neo4j Relationship Insight Box */}
+                <div
+                  className="p-4 rounded-lg border space-y-2"
+                  style={{
+                    backgroundColor: isDark ? 'rgba(0, 77, 47, 0.25)' : 'rgba(0, 136, 85, 0.08)',
+                    borderColor: isDark ? 'rgba(0, 162, 100, 0.35)' : 'rgba(0, 136, 85, 0.25)',
+                  }}
+                >
+                  <div className={`flex items-center gap-1.5 text-xs font-semibold ${
+                    isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                  }`}>
+                    <ReiconGraph size={15} strokeWidth={2} />
+                    Knowledge Graph Co-occurrence
+                  </div>
+                  <p className={`text-xs font-mono ${
+                    isDark ? 'text-neutral-300' : 'text-[#0A2618]'
+                  }`}>
+                    (Role: Staff Platform Engineer)-[:REQUIRES]-&gt;(Skill: Python) co-occurs in 89.2% of fintech backend postings.
                   </p>
                 </div>
               </div>
 
-              {/* Matched vs Skill Gaps */}
-              <div className={`space-y-3 pt-4 border-t ${isDark ? 'border-white/10' : 'border-neutral-200'}`}>
-                <div className={`text-xs font-semibold ${isDark ? 'text-neutral-400' : 'text-[#004D2F]'}`}>
-                  Matched Skills (8)
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {['Python', 'Django', 'FastAPI', 'PostgreSQL', 'Docker', 'REST API', 'Redis'].map((s) => (
-                    <span
-                      key={s}
-                      className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md font-mono"
-                      style={{
-                        backgroundColor: isDark ? 'rgba(0, 77, 47, 0.25)' : 'rgba(0, 136, 85, 0.08)',
-                        borderColor: isDark ? 'rgba(0, 162, 100, 0.3)' : 'rgba(0, 136, 85, 0.25)',
-                        color: isDark ? 'rgba(76, 214, 129, 1)' : '#004D2F',
-                        borderWidth: '1px',
-                      }}
-                    >
-                      <Check className={`h-3 w-3 ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'}`} />
-                      {s}
-                    </span>
-                  ))}
-                </div>
-
-                <div className={`text-xs font-semibold pt-2 ${isDark ? 'text-neutral-400' : 'text-[#004D2F]'}`}>
-                  Identified Skill Gap (1)
-                </div>
-                <div>
-                  <span className={`inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md font-mono border ${
+              <div className="pt-6">
+                <button
+                  className={`w-full rounded-lg py-2.5 text-xs font-semibold border transition-all ${
                     isDark
-                      ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                      : 'bg-amber-50 text-amber-900 border-amber-300 font-semibold'
-                  }`}>
-                    <Zap className="h-3 w-3" />
-                    Kubernetes (Curated Learning Resource in Phase 3)
-                  </span>
-                </div>
+                      ? 'border-[rgba(0,162,100,0.3)] hover:bg-[rgba(0,77,47,0.3)] text-neutral-200'
+                      : 'border-[rgba(0,136,85,0.35)] hover:bg-[#EEF7F1] text-[#004D2F] bg-white shadow-xs'
+                  }`}
+                >
+                  View Full Requirements & Apply →
+                </button>
               </div>
-            </div>
+            </SpotlightCard>
 
-            <div className="pt-6">
-              <button
-                className="w-full rounded-lg py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm"
+            {/* Card 3: Featured Placement Program with Koboyo Hand-drawn Icons */}
+            <SpotlightCard
+              spotlightColor={isDark ? 'rgba(0, 162, 100, 0.2)' : 'rgba(0, 136, 85, 0.12)'}
+              className="lg:col-span-4 space-y-6 flex flex-col justify-between"
+            >
+              {/* Featured Tier Card */}
+              <div
+                className={`rounded-xl p-6 border-2 relative transition-all ${
+                  isDark ? 'bg-[#09150E]' : 'bg-white shadow-xs'
+                }`}
                 style={{
-                  backgroundColor: 'rgba(76, 214, 129, 1)',
-                  color: '#003B24',
+                  borderColor: 'rgba(0, 162, 100, 1)',
+                  boxShadow: isDark ? '0 8px 30px rgba(0, 162, 100, 0.16)' : '0 8px 30px rgba(0, 136, 85, 0.1)',
                 }}
               >
-                <FileText className="h-3.5 w-3.5" />
-                Generate Tailored ATS Resume (.docx)
-              </button>
-            </div>
-          </div>
-
-          {/* Card 2: Live Opportunity Match */}
-          <div
-            className={`lg:col-span-4 rounded-xl border p-6 flex flex-col justify-between transition-all ${
-              isDark
-                ? 'bg-[#09150E] border-[rgba(0,162,100,0.22)]'
-                : 'bg-white border-[rgba(0,136,85,0.22)] shadow-xs'
-            }`}
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className={`text-xs font-semibold uppercase tracking-wider font-mono ${
-                  isDark ? 'text-neutral-400' : 'text-[#004D2F]'
-                }`}>
-                  Live Placement Match
-                </span>
-                <span className={`text-[11px] font-mono ${isDark ? 'text-neutral-400' : 'text-neutral-500 font-semibold'}`}>
-                  ID: job-5481
-                </span>
-              </div>
-
-              <div
-                className={`p-4 rounded-lg border space-y-3 ${
-                  isDark
-                    ? 'bg-[#050D08] border-[rgba(0,162,100,0.2)]'
-                    : 'bg-[#F2FAF5] border-[rgba(0,136,85,0.2)]'
-                }`}
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <span
-                      className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded"
-                      style={{
-                        backgroundColor: isDark ? 'rgba(0, 77, 47, 0.4)' : 'rgba(0, 136, 85, 0.12)',
-                        color: isDark ? 'rgba(76, 214, 129, 1)' : '#004D2F',
-                      }}
-                    >
-                      Full-Time
-                    </span>
-                    <h3 className={`font-semibold text-base mt-2 ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
-                      Staff Platform Engineer
-                    </h3>
-                    <p className={`text-xs font-mono mt-0.5 ${isDark ? 'text-neutral-400' : 'text-neutral-600'}`}>
-                      Razorpay • Bengaluru, IN (Hybrid)
-                    </p>
-                  </div>
-                  <span className={`font-mono text-xs font-bold ${
-                    isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-xs font-semibold uppercase tracking-wider font-mono flex items-center gap-1.5 ${
+                    isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'
                   }`}>
-                    ₹28L - ₹36L
+                    <KoboyoBadge size={15} strokeWidth={2} />
+                    Featured Placement Program
+                  </span>
+                  <span
+                    className="text-[10px] font-bold px-2 py-0.5 rounded font-mono uppercase"
+                    style={{
+                      backgroundColor: 'rgba(76, 214, 129, 1)',
+                      color: '#003B24',
+                    }}
+                  >
+                    Batch 2026
                   </span>
                 </div>
 
-                <p className={`text-xs leading-relaxed line-clamp-3 ${
-                  isDark ? 'text-neutral-300' : 'text-[#1C3829]'
-                }`}>
-                  Building distributed transaction routing engines using high-throughput async Python microservices, Neo4j knowledge graph indexing, and container orchestration.
+                <h3 className={`text-xl font-bold mt-1 ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
+                  Placement Acceleration
+                </h3>
+                <p className={`text-xs mt-1 ${isDark ? 'text-neutral-400' : 'text-neutral-600'}`}>
+                  Automated ATS tailoring, GraphRAG reasoning, and technical interview simulation.
                 </p>
 
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {['Python', 'AsyncIO', 'Neo4j', 'Redis', 'Docker'].map((sk) => (
-                    <span
-                      key={sk}
-                      className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
-                        isDark
-                          ? 'bg-[rgba(0,77,47,0.2)] border-[rgba(0,162,100,0.25)] text-neutral-200'
-                          : 'bg-white border-[rgba(0,136,85,0.2)] text-[#004D2F] font-semibold'
-                      }`}
-                    >
-                      {sk}
-                    </span>
+                <div className={`my-4 pt-3 border-t space-y-2 text-xs ${isDark ? 'border-white/10' : 'border-neutral-200'}`}>
+                  {[
+                    'Unlimited GraphRAG Market Queries',
+                    'One-Click Tailored ATS DOCX Export',
+                    'Live Knowledge Graph Co-occurrence Map',
+                    'Mock Interview Simulation (Phase 3)',
+                  ].map((feat) => (
+                    <div key={feat} className={`flex items-center gap-2 ${isDark ? 'text-neutral-200' : 'text-[#143021]'}`}>
+                      <KoboyoCheck size={14} className={isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'} />
+                      <span>{feat}</span>
+                    </div>
                   ))}
                 </div>
-              </div>
 
-              {/* Neo4j Relationship Insight Box */}
-              <div
-                className="p-4 rounded-lg border space-y-2"
-                style={{
-                  backgroundColor: isDark ? 'rgba(0, 77, 47, 0.25)' : 'rgba(0, 136, 85, 0.08)',
-                  borderColor: isDark ? 'rgba(0, 162, 100, 0.35)' : 'rgba(0, 136, 85, 0.25)',
-                }}
-              >
-                <div className={`flex items-center gap-1.5 text-xs font-semibold ${
-                  isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
-                }`}>
-                  <Network className="h-4 w-4" />
-                  Knowledge Graph Co-occurrence
-                </div>
-                <p className={`text-xs font-mono ${
-                  isDark ? 'text-neutral-300' : 'text-[#0A2618]'
-                }`}>
-                  (Role: Staff Platform Engineer)-[:REQUIRES]-&gt;(Skill: Python) co-occurs in 89.2% of fintech backend postings.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-6">
-              <button
-                className={`w-full rounded-lg py-2.5 text-xs font-semibold border transition-all ${
-                  isDark
-                    ? 'border-[rgba(0,162,100,0.3)] hover:bg-[rgba(0,77,47,0.3)] text-neutral-200'
-                    : 'border-[rgba(0,136,85,0.35)] hover:bg-[#EEF7F1] text-[#004D2F] bg-white shadow-xs'
-                }`}
-              >
-                View Full Requirements & Apply →
-              </button>
-            </div>
-          </div>
-
-          {/* Card 3: Signature Featured Tier & Testimonial */}
-          <div className="lg:col-span-4 space-y-6 flex flex-col justify-between">
-            {/* Featured Tier Card */}
-            <div
-              className={`rounded-xl p-6 border-2 relative transition-all ${
-                isDark ? 'bg-[#09150E]' : 'bg-white shadow-xs'
-              }`}
-              style={{
-                borderColor: 'rgba(0, 162, 100, 1)',
-                boxShadow: isDark ? '0 8px 30px rgba(0, 162, 100, 0.16)' : '0 8px 30px rgba(0, 136, 85, 0.1)',
-              }}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className={`text-xs font-semibold uppercase tracking-wider font-mono ${
-                  isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'
-                }`}>
-                  Featured Placement Program
-                </span>
-                <span
-                  className="text-[10px] font-bold px-2 py-0.5 rounded font-mono uppercase"
+                <button
+                  className="w-full rounded-lg py-2.5 text-xs font-bold transition-all mt-2 cursor-pointer"
                   style={{
-                    backgroundColor: 'rgba(76, 214, 129, 1)',
-                    color: '#003B24',
+                    backgroundColor: 'rgba(0, 136, 85, 1)',
+                    color: '#FFFFFF',
                   }}
                 >
-                  Batch 2026
-                </span>
+                  Enroll In Program
+                </button>
               </div>
 
-              <h3 className={`text-xl font-bold mt-1 ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
-                Placement Acceleration
+              {/* Testimonial Card — Rendered in Deep Forest Emerald */}
+              <div
+                className="rounded-xl p-6 text-white space-y-3 shadow-md border"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 77, 47, 1) 0%, #032014 100%)',
+                  borderColor: 'rgba(0, 162, 100, 0.35)',
+                }}
+              >
+                <div className="flex items-center justify-between text-white/80 text-xs">
+                  <span className="font-mono uppercase tracking-wider text-[11px] font-semibold text-[rgba(76,214,129,1)] flex items-center gap-1.5">
+                    <KoboyoBrain size={14} />
+                    Student Success Story
+                  </span>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star key={i} className="h-3 w-3 fill-[rgba(76,214,129,1)] text-[rgba(76,214,129,1)]" />
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-sm font-medium leading-snug text-neutral-100">
+                  &ldquo;SkillBridge pinpointed the exact 2 missing skills I needed for the Bangalore backend drive. Tailored my resume, practiced the questions, and cleared all technical rounds.&rdquo;
+                </p>
+
+                <div className="pt-2 border-t border-white/20 flex items-center gap-3">
+                  <div
+                    className="h-8 w-8 rounded font-bold text-xs flex items-center justify-center"
+                    style={{
+                      backgroundColor: 'rgba(76, 214, 129, 0.25)',
+                      color: 'rgba(76, 214, 129, 1)',
+                    }}
+                  >
+                    ZA
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold leading-tight">Zaid Alam</div>
+                    <div className="text-[10px] text-white/80">Placed at Tier-1 FinTech • CSE 2026</div>
+                  </div>
+                </div>
+              </div>
+            </SpotlightCard>
+          </div>
+        )}
+
+        {/* Tab 2: React Bits Dynamic Playground */}
+        {segmentedTab === 'dynamic' && (
+          <div className="space-y-8 animate-in fade-in duration-300">
+            <div>
+              <span className={`font-mono text-xs uppercase tracking-wider font-bold ${
+                isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'
+              }`}>
+                reactbits.dev Components
+              </span>
+              <h3 className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
+                Interactive Motion & Dynamic UI Primitives
               </h3>
               <p className={`text-xs mt-1 ${isDark ? 'text-neutral-400' : 'text-neutral-600'}`}>
-                Automated ATS tailoring, GraphRAG reasoning, and technical interview simulation.
+                Test live cursor-following spotlights, character decryption, magnetic physics, and animated counters.
               </p>
-
-              <div className={`my-4 pt-3 border-t space-y-2 text-xs ${isDark ? 'border-white/10' : 'border-neutral-200'}`}>
-                {[
-                  'Unlimited GraphRAG Market Queries',
-                  'One-Click Tailored ATS DOCX Export',
-                  'Live Knowledge Graph Co-occurrence Map',
-                  'Mock Interview Simulation (Phase 3)',
-                ].map((feat) => (
-                  <div key={feat} className={`flex items-center gap-2 ${isDark ? 'text-neutral-200' : 'text-[#143021]'}`}>
-                    <Check className={`h-3.5 w-3.5 ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'}`} />
-                    <span>{feat}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                className="w-full rounded-lg py-2.5 text-xs font-bold transition-all mt-2"
-                style={{
-                  backgroundColor: 'rgba(0, 136, 85, 1)',
-                  color: '#FFFFFF',
-                }}
-              >
-                Enroll In Program
-              </button>
             </div>
 
-            {/* Testimonial Card — Rendered in Deep Forest Emerald */}
-            <div
-              className="rounded-xl p-6 text-white space-y-3 shadow-md border"
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 77, 47, 1) 0%, #032014 100%)',
-                borderColor: 'rgba(0, 162, 100, 0.35)',
-              }}
-            >
-              <div className="flex items-center justify-between text-white/80 text-xs">
-                <span className="font-mono uppercase tracking-wider text-[11px] font-semibold text-[rgba(76,214,129,1)]">
-                  Student Success Story
-                </span>
-                <div className="flex gap-0.5">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="h-3 w-3 fill-[rgba(76,214,129,1)] text-[rgba(76,214,129,1)]" />
-                  ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Feature 1: Spotlight Card Sandbox */}
+              <SpotlightCard
+                spotlightColor={isDark ? 'rgba(76, 214, 129, 0.25)' : 'rgba(0, 162, 100, 0.18)'}
+                spotlightSize={280}
+                className={`p-6 rounded-xl border ${
+                  isDark
+                    ? 'bg-[#09150E] border-[rgba(0,162,100,0.25)]'
+                    : 'bg-white border-[rgba(0,136,85,0.25)] shadow-xs'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`text-xs font-mono uppercase font-bold flex items-center gap-1.5 ${
+                    isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                  }`}>
+                    <Activity size={15} /> SpotlightCard
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                    Hover Cursor Here
+                  </span>
+                </div>
+                <h4 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
+                  Dynamic Cursor Radial Spotlight
+                </h4>
+                <p className={`text-xs mt-2 leading-relaxed ${isDark ? 'text-neutral-300' : 'text-[#1C3829]'}`}>
+                  Move your mouse across this card to watch the emerald spotlight track your pointer in real time. Built with hardware-accelerated CSS radial gradients and zero layout thrash.
+                </p>
+                <div className="mt-6 flex items-center gap-2">
+                  <span className="text-[11px] font-mono font-semibold px-2.5 py-1 rounded bg-[rgba(0,136,85,0.15)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border border-[rgba(0,162,100,0.3)]">
+                    rgba(76, 214, 129, 0.25)
+                  </span>
+                  <span className="text-[11px] font-mono text-muted-foreground">Radius: 280px</span>
+                </div>
+              </SpotlightCard>
+
+              {/* Feature 2: DecryptedText Sandbox */}
+              <div
+                className={`p-6 rounded-xl border ${
+                  isDark
+                    ? 'bg-[#09150E] border-[rgba(0,162,100,0.25)]'
+                    : 'bg-white border-[rgba(0,136,85,0.25)] shadow-xs'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`text-xs font-mono uppercase font-bold flex items-center gap-1.5 ${
+                    isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                  }`}>
+                    <Code2 size={15} /> DecryptedText Sandbox
+                  </span>
+                  <button
+                    onClick={() => setSandboxDecryptKey((prev) => prev + 1)}
+                    className="text-[10px] font-mono px-2.5 py-1 rounded bg-[rgba(0,136,85,0.15)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border border-[rgba(0,162,100,0.3)] flex items-center gap-1 cursor-pointer hover:scale-105 transition-all"
+                  >
+                    <RefreshCw size={11} /> Re-Scramble
+                  </button>
+                </div>
+                <div className={`p-4 rounded-lg font-mono text-sm border my-3 ${
+                  isDark ? 'bg-[#050D08] border-white/10' : 'bg-[#F2FAF5] border-[rgba(0,136,85,0.2)]'
+                }`}>
+                  <DecryptedText
+                    text={sandboxDecryptText}
+                    triggerKey={sandboxDecryptKey}
+                    speed={30}
+                    maxIterations={15}
+                    className={`font-bold ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'}`}
+                  />
+                </div>
+                <div className="flex gap-2 items-center pt-2">
+                  <input
+                    type="text"
+                    value={sandboxDecryptText}
+                    onChange={(e) => setSandboxDecryptText(e.target.value)}
+                    placeholder="Type custom text to decrypt..."
+                    className={`w-full text-xs font-mono px-3 py-1.5 rounded border focus:outline-none ${
+                      isDark ? 'bg-[#050D08] border-white/10 text-white' : 'bg-white border-neutral-300 text-[#004D2F]'
+                    }`}
+                  />
+                  <button
+                    onClick={() => setSandboxDecryptKey((p) => p + 1)}
+                    className="text-xs px-3 py-1.5 rounded font-bold whitespace-nowrap text-white cursor-pointer"
+                    style={{ backgroundColor: 'rgba(0, 136, 85, 1)' }}
+                  >
+                    Test
+                  </button>
                 </div>
               </div>
 
-              <p className="text-sm font-medium leading-snug text-neutral-100">
-                &ldquo;SkillBridge pinpointed the exact 2 missing skills I needed for the Bangalore backend drive. Tailored my resume, practiced the questions, and cleared all technical rounds.&rdquo;
-              </p>
-
-              <div className="pt-2 border-t border-white/20 flex items-center gap-3">
-                <div
-                  className="h-8 w-8 rounded font-bold text-xs flex items-center justify-center"
-                  style={{
-                    backgroundColor: 'rgba(76, 214, 129, 0.25)',
-                    color: 'rgba(76, 214, 129, 1)',
-                  }}
-                >
-                  ZA
+              {/* Feature 3: Magnet Physics Buttons */}
+              <div
+                className={`p-6 rounded-xl border ${
+                  isDark
+                    ? 'bg-[#09150E] border-[rgba(0,162,100,0.25)]'
+                    : 'bg-white border-[rgba(0,136,85,0.25)] shadow-xs'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`text-xs font-mono uppercase font-bold flex items-center gap-1.5 ${
+                    isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                  }`}>
+                    <Sliders size={15} /> Magnet Component
+                  </span>
+                  <span className="text-[10px] font-mono text-muted-foreground">Threshold: 50px</span>
                 </div>
-                <div>
-                  <div className="text-xs font-bold leading-tight">Zaid Alam</div>
-                  <div className="text-[10px] text-white/80">Placed at Tier-1 FinTech • CSE 2026</div>
+                <h4 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
+                  Tactile Spring Magnet Pull
+                </h4>
+                <p className={`text-xs mt-2 leading-relaxed ${isDark ? 'text-neutral-300' : 'text-[#1C3829]'}`}>
+                  Hover your cursor near the buttons below. The elements detect cursor proximity and dynamically pull towards the pointer with spring physics.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-4 items-center">
+                  <Magnet padding={40} magnetStrength={2}>
+                    <button
+                      className="px-4 py-2 rounded-lg text-xs font-bold text-[#003822] cursor-pointer shadow-md"
+                      style={{ backgroundColor: 'rgba(76, 214, 129, 1)' }}
+                    >
+                      Magnetic Mint
+                    </button>
+                  </Magnet>
+                  <Magnet padding={40} magnetStrength={2}>
+                    <button
+                      className="px-4 py-2 rounded-lg text-xs font-semibold text-white cursor-pointer shadow-md"
+                      style={{ backgroundColor: 'rgba(0, 136, 85, 1)' }}
+                    >
+                      Magnetic Emerald
+                    </button>
+                  </Magnet>
+                  <Magnet padding={40} magnetStrength={2}>
+                    <button
+                      className={`px-4 py-2 rounded-lg text-xs font-semibold border cursor-pointer ${
+                        isDark ? 'border-[rgba(0,162,100,0.5)] text-white' : 'border-[rgba(0,136,85,0.4)] text-[#004D2F]'
+                      }`}
+                    >
+                      Magnetic Outline
+                    </button>
+                  </Magnet>
+                </div>
+              </div>
+
+              {/* Feature 4: Animated Number Counters */}
+              <div
+                className={`p-6 rounded-xl border ${
+                  isDark
+                    ? 'bg-[#09150E] border-[rgba(0,162,100,0.25)]'
+                    : 'bg-white border-[rgba(0,136,85,0.25)] shadow-xs'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`text-xs font-mono uppercase font-bold flex items-center gap-1.5 ${
+                    isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
+                  }`}>
+                    <Activity size={15} /> Animated Number Tickers
+                  </span>
+                  <span className="text-[10px] font-mono text-muted-foreground">Easing: easeOutExpo</span>
+                </div>
+                <h4 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
+                  Fluid Numeric Animation
+                </h4>
+                <div className="grid grid-cols-3 gap-3 mt-4">
+                  <div className={`p-3 rounded-lg border text-center ${isDark ? 'bg-[#050D08] border-white/10' : 'bg-[#F2FAF5] border-neutral-200'}`}>
+                    <div className={`text-2xl font-bold font-mono ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'}`}>
+                      <AnimatedNumber value={88} duration={1500} suffix="%" />
+                    </div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">Fit Score</div>
+                  </div>
+                  <div className={`p-3 rounded-lg border text-center ${isDark ? 'bg-[#050D08] border-white/10' : 'bg-[#F2FAF5] border-neutral-200'}`}>
+                    <div className={`text-2xl font-bold font-mono ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'}`}>
+                      <AnimatedNumber value={1240} duration={1800} suffix="+" />
+                    </div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">Postings</div>
+                  </div>
+                  <div className={`p-3 rounded-lg border text-center ${isDark ? 'bg-[#050D08] border-white/10' : 'bg-[#F2FAF5] border-neutral-200'}`}>
+                    <div className={`text-2xl font-bold font-mono ${isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'}`}>
+                      <AnimatedNumber value={4820} duration={2000} />
+                    </div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">Graph Nodes</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Tab 3: Reicon & Koboyo Icons Gallery */}
+        {segmentedTab === 'icons' && (
+          <div className="space-y-8 animate-in fade-in duration-300">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <span className={`font-mono text-xs uppercase tracking-wider font-bold ${
+                  isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#008855]'
+                }`}>
+                  reicon.dev/icons & koboyo.com/icons
+                </span>
+                <h3 className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
+                  Handcrafted Modern & Hand-Drawn SVG Icons
+                </h3>
+                <p className={`text-xs mt-1 ${isDark ? 'text-neutral-400' : 'text-neutral-600'}`}>
+                  Customized for SkillBridge with live stroke width and size customization. Click any icon to copy its JSX component.
+                </p>
+              </div>
+
+              {/* Icon Customizer Controls */}
+              <div className="flex items-center gap-4 text-xs font-mono">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Stroke:</span>
+                  {[1.5, 1.75, 2.2].map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setIconStroke(s)}
+                      className={`px-2 py-0.5 rounded border transition-all ${
+                        iconStroke === s
+                          ? 'bg-[rgba(0,136,85,0.2)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border-[rgba(0,162,100,0.5)] font-bold'
+                          : 'border-neutral-300 dark:border-white/10 text-neutral-600 dark:text-neutral-400'
+                      }`}
+                    >
+                      {s}px
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Size:</span>
+                  {[20, 24, 32].map((sz) => (
+                    <button
+                      key={sz}
+                      onClick={() => setIconSize(sz)}
+                      className={`px-2 py-0.5 rounded border transition-all ${
+                        iconSize === sz
+                          ? 'bg-[rgba(0,136,85,0.2)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border-[rgba(0,162,100,0.5)] font-bold'
+                          : 'border-neutral-300 dark:border-white/10 text-neutral-600 dark:text-neutral-400'
+                      }`}
+                    >
+                      {sz}px
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Reicon Section */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold font-mono">Reicon (reicon.dev) — Geometric Outline</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 border border-blue-500/20 font-mono">
+                  24x24 • currentColor
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+                {[
+                  { name: '<ReiconGraph />', icon: <ReiconGraph size={iconSize} strokeWidth={iconStroke} />, label: 'Knowledge Graph' },
+                  { name: '<ReiconRadar />', icon: <ReiconRadar size={iconSize} strokeWidth={iconStroke} />, label: 'Market Radar' },
+                  { name: '<ReiconAtsDoc />', icon: <ReiconAtsDoc size={iconSize} strokeWidth={iconStroke} />, label: 'ATS Document' },
+                  { name: '<ReiconTerminal />', icon: <ReiconTerminal size={iconSize} strokeWidth={iconStroke} />, label: 'Market Terminal' },
+                  { name: '<ReiconShieldCheck />', icon: <ReiconShieldCheck size={iconSize} strokeWidth={iconStroke} />, label: 'Skill Match' },
+                  { name: '<ReiconTrending />', icon: <ReiconTrending size={iconSize} strokeWidth={iconStroke} />, label: 'Salary Trend' },
+                  { name: '<ReiconCpu />', icon: <ReiconCpu size={iconSize} strokeWidth={iconStroke} />, label: 'Fast Inference' },
+                ].map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => copyIconName(item.name)}
+                    className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center transition-all hover:scale-105 cursor-pointer ${
+                      isDark
+                        ? 'bg-[#09150E] border-[rgba(0,162,100,0.25)] text-[rgba(76,214,129,1)] hover:border-[rgba(76,214,129,0.5)]'
+                        : 'bg-white border-[rgba(0,136,85,0.22)] text-[#004D2F] hover:border-[#008855] shadow-xs'
+                    }`}
+                  >
+                    <div className="h-10 flex items-center justify-center">
+                      {item.icon}
+                    </div>
+                    <span className="text-[11px] font-semibold mt-2">{item.label}</span>
+                    <span className="text-[9px] font-mono text-muted-foreground mt-0.5">
+                      {copiedIcon === item.name ? 'Copied!' : item.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Koboyo Section */}
+            <div className="space-y-4 pt-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold font-mono">Koboyo Icons (koboyo.com) — Hand-Drawn Craft</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-mono">
+                  By Kamran Ahmed (roadmap.sh)
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {[
+                  { name: '<KoboyoSparkle />', icon: <KoboyoSparkle size={iconSize} strokeWidth={iconStroke} />, label: 'Organic Sparkle' },
+                  { name: '<KoboyoBrain />', icon: <KoboyoBrain size={iconSize} strokeWidth={iconStroke} />, label: 'Knowledge Brain' },
+                  { name: '<KoboyoTarget />', icon: <KoboyoTarget size={iconSize} strokeWidth={iconStroke} />, label: 'Placement Target' },
+                  { name: '<KoboyoBadge />', icon: <KoboyoBadge size={iconSize} strokeWidth={iconStroke} />, label: 'Verified Badge' },
+                  { name: '<KoboyoCheck />', icon: <KoboyoCheck size={iconSize} strokeWidth={iconStroke} />, label: 'Handcrafted Check' },
+                ].map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => copyIconName(item.name)}
+                    className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center transition-all hover:scale-105 cursor-pointer ${
+                      isDark
+                        ? 'bg-[#09150E] border-[rgba(0,162,100,0.25)] text-[rgba(76,214,129,1)] hover:border-[rgba(76,214,129,0.5)]'
+                        : 'bg-white border-[rgba(0,136,85,0.22)] text-[#004D2F] hover:border-[#008855] shadow-xs'
+                    }`}
+                  >
+                    <div className="h-10 flex items-center justify-center">
+                      {item.icon}
+                    </div>
+                    <span className="text-[11px] font-semibold mt-2">{item.label}</span>
+                    <span className="text-[9px] font-mono text-muted-foreground mt-0.5">
+                      {copiedIcon === item.name ? 'Copied!' : item.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Tokens & Components Gallery in Exact Palette */}
         <div className={`pt-12 border-t space-y-8 ${isDark ? 'border-white/10' : 'border-neutral-200'}`}>
