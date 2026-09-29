@@ -9,12 +9,16 @@ import { DashboardPage } from './pages/DashboardPage';
 import { JobExplorerPage } from './pages/JobExplorerPage';
 import { ResumeAnalyzerPage } from './pages/ResumeAnalyzerPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { DesignShowcasePage } from './pages/DesignShowcasePage';
 
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          {/* Public dummy design system showcase page (for visual review) */}
+          <Route path="/design" element={<DesignShowcasePage />} />
+
           {/* Public routes (redirect to / if already authenticated) */}
           <Route element={<PublicOnlyRoute />}>
             <Route path="/login" element={<LoginPage />} />
