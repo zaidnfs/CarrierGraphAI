@@ -37,6 +37,13 @@ from .agent_service import (
     AgentState,
     get_agent_service,
 )
+from .resume_service import (
+    ResumeService,
+    ResumeServiceError,
+    ResumeParseError,
+    ResumeValidationError,
+    get_resume_service,
+)
 
 __all__ = [
     "get_job_service",
@@ -65,4 +72,9 @@ __all__ = [
     "AgentService",
     "AgentState",
     "get_agent_service",
+    "ResumeService",
+    "ResumeServiceError",
+    "ResumeParseError",
+    "ResumeValidationError",
+    "get_resume_service",
 ]
