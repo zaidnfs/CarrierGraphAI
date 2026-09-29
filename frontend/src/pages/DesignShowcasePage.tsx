@@ -23,7 +23,6 @@ import {
 import { SpotlightCard } from '../components/reactbits/SpotlightCard';
 import { DecryptedText } from '../components/reactbits/DecryptedText';
 import { GradientText } from '../components/reactbits/GradientText';
-import { Magnet } from '../components/reactbits/Magnet';
 import { AnimatedNumber } from '../components/reactbits/AnimatedNumber';
 
 // Handcrafted Modern Icons (Reicon & Koboyo)
@@ -270,37 +269,33 @@ export const DesignShowcasePage: React.FC = () => {
             Transform raw job postings into queryable knowledge graphs. Calibrate your resume with objective fit scoring and export optimized ATS DOCX resumes.
           </p>
 
-          {/* Sleek Rectangular Buttons with React Bits Magnet Pull */}
+          {/* Sleek Rectangular Buttons (Stable & Grounded) */}
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            {/* Luminous Mint Button with Magnet */}
-            <Magnet padding={45} magnetStrength={2.5}>
-              <button
-                className="rounded-lg px-6 py-3 text-sm font-bold text-[#003822] transition-all hover:brightness-105 active:scale-[0.98] flex items-center gap-2 shadow-[0_0_24px_rgba(76,214,129,0.35)] cursor-pointer"
-                style={{ backgroundColor: 'rgba(76, 214, 129, 1)' }}
-              >
-                <span>Explore GraphRAG Query</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </Magnet>
+            {/* Luminous Mint Button */}
+            <button
+              className="rounded-lg px-6 py-3 text-sm font-bold text-[#003822] transition-all hover:brightness-105 active:scale-[0.98] flex items-center gap-2 shadow-[0_0_24px_rgba(76,214,129,0.35)] cursor-pointer"
+              style={{ backgroundColor: 'rgba(76, 214, 129, 1)' }}
+            >
+              <span>Explore GraphRAG Query</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
 
-            {/* Deep Forest Emerald Button with Magnet */}
-            <Magnet padding={45} magnetStrength={2.5}>
-              <button
-                className="rounded-lg px-6 py-3 text-sm font-semibold transition-all active:scale-[0.98] border shadow-sm flex items-center gap-2 cursor-pointer"
-                style={{
-                  backgroundColor: isDark ? 'rgba(0, 77, 47, 0.45)' : 'rgba(0, 77, 47, 1)',
-                  borderColor: 'rgba(0, 162, 100, 0.45)',
-                  color: isDark ? 'rgba(76, 214, 129, 1)' : '#FFFFFF',
-                }}
-              >
-                <ReiconAtsDoc size={16} strokeWidth={2} />
-                <span>Analyze Resume</span>
-              </button>
-            </Magnet>
+            {/* Deep Forest Emerald Button */}
+            <button
+              className="rounded-lg px-6 py-3 text-sm font-semibold transition-all active:scale-[0.98] border shadow-sm flex items-center gap-2 cursor-pointer hover:brightness-110"
+              style={{
+                backgroundColor: isDark ? 'rgba(0, 77, 47, 0.45)' : 'rgba(0, 77, 47, 1)',
+                borderColor: 'rgba(0, 162, 100, 0.45)',
+                color: isDark ? 'rgba(76, 214, 129, 1)' : '#FFFFFF',
+              }}
+            >
+              <ReiconAtsDoc size={16} strokeWidth={2} />
+              <span>Analyze Resume</span>
+            </button>
 
             {/* Vibrant Emerald Outline Button */}
             <button
-              className={`rounded-lg px-5 py-3 text-sm font-semibold border transition-all ${
+              className={`rounded-lg px-5 py-3 text-sm font-semibold border transition-all cursor-pointer ${
                 isDark
                   ? 'border-[rgba(0,162,100,0.3)] hover:bg-[rgba(0,77,47,0.25)] text-neutral-200'
                   : 'border-[rgba(0,136,85,0.4)] hover:bg-[#EEF7F1] text-[#004D2F] bg-white shadow-xs'
@@ -696,18 +691,16 @@ export const DesignShowcasePage: React.FC = () => {
               </div>
 
               <div className="pt-6">
-                <Magnet padding={30} magnetStrength={3} wrapperClassName="w-full">
-                  <button
-                    className="w-full rounded-lg py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
-                    style={{
-                      backgroundColor: 'rgba(76, 214, 129, 1)',
-                      color: '#003B24',
-                    }}
-                  >
-                    <ReiconAtsDoc size={15} strokeWidth={2} />
-                    Generate Tailored ATS Resume (.docx)
-                  </button>
-                </Magnet>
+                <button
+                  className="w-full rounded-lg py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:brightness-105 active:scale-[0.98]"
+                  style={{
+                    backgroundColor: 'rgba(76, 214, 129, 1)',
+                    color: '#003B24',
+                  }}
+                >
+                  <ReiconAtsDoc size={15} strokeWidth={2} />
+                  Generate Tailored ATS Resume (.docx)
+                </button>
               </div>
             </SpotlightCard>
 
@@ -1035,7 +1028,7 @@ export const DesignShowcasePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Feature 3: Magnet Physics Buttons */}
+              {/* Feature 3: Stable Tactile Micro-Interactions */}
               <div
                 className={`p-6 rounded-xl border ${
                   isDark
@@ -1047,42 +1040,38 @@ export const DesignShowcasePage: React.FC = () => {
                   <span className={`text-xs font-mono uppercase font-bold flex items-center gap-1.5 ${
                     isDark ? 'text-[rgba(76,214,129,1)]' : 'text-[#004D2F]'
                   }`}>
-                    <Sliders size={15} /> Magnet Component
+                    <Sliders size={15} /> Tactile Button Feedback
                   </span>
-                  <span className="text-[10px] font-mono text-muted-foreground">Threshold: 50px</span>
+                  <span className="text-[10px] font-mono text-muted-foreground">Stable & Grounded</span>
                 </div>
                 <h4 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-[#004D2F]'}`}>
-                  Tactile Spring Magnet Pull
+                  High-Precision Micro-Interactions
                 </h4>
                 <p className={`text-xs mt-2 leading-relaxed ${isDark ? 'text-neutral-300' : 'text-[#1C3829]'}`}>
-                  Hover your cursor near the buttons below. The elements detect cursor proximity and dynamically pull towards the pointer with spring physics.
+                  Buttons stay firmly anchored in place with zero drifting or running away. Features crisp active press scaling (`active:scale-[0.98]`), brightness hover, and focus rings.
                 </p>
-                <div className="mt-6 flex flex-wrap gap-4 items-center">
-                  <Magnet padding={40} magnetStrength={2}>
-                    <button
-                      className="px-4 py-2 rounded-lg text-xs font-bold text-[#003822] cursor-pointer shadow-md"
-                      style={{ backgroundColor: 'rgba(76, 214, 129, 1)' }}
-                    >
-                      Magnetic Mint
-                    </button>
-                  </Magnet>
-                  <Magnet padding={40} magnetStrength={2}>
-                    <button
-                      className="px-4 py-2 rounded-lg text-xs font-semibold text-white cursor-pointer shadow-md"
-                      style={{ backgroundColor: 'rgba(0, 136, 85, 1)' }}
-                    >
-                      Magnetic Emerald
-                    </button>
-                  </Magnet>
-                  <Magnet padding={40} magnetStrength={2}>
-                    <button
-                      className={`px-4 py-2 rounded-lg text-xs font-semibold border cursor-pointer ${
-                        isDark ? 'border-[rgba(0,162,100,0.5)] text-white' : 'border-[rgba(0,136,85,0.4)] text-[#004D2F]'
-                      }`}
-                    >
-                      Magnetic Outline
-                    </button>
-                  </Magnet>
+                <div className="mt-6 flex flex-wrap gap-3 items-center">
+                  <button
+                    className="px-4 py-2.5 rounded-lg text-xs font-bold text-[#003822] cursor-pointer shadow-md transition-all hover:brightness-105 active:scale-[0.98]"
+                    style={{ backgroundColor: 'rgba(76, 214, 129, 1)' }}
+                  >
+                    Stable Mint CTA
+                  </button>
+                  <button
+                    className="px-4 py-2.5 rounded-lg text-xs font-semibold text-white cursor-pointer shadow-md transition-all hover:brightness-110 active:scale-[0.98]"
+                    style={{ backgroundColor: 'rgba(0, 136, 85, 1)' }}
+                  >
+                    Vibrant Emerald
+                  </button>
+                  <button
+                    className={`px-4 py-2.5 rounded-lg text-xs font-semibold border cursor-pointer transition-all active:scale-[0.98] ${
+                      isDark
+                        ? 'border-[rgba(0,162,100,0.5)] hover:bg-[rgba(0,77,47,0.3)] text-white'
+                        : 'border-[rgba(0,136,85,0.4)] hover:bg-[#EEF7F1] text-[#004D2F]'
+                    }`}
+                  >
+                    Grounded Outline
+                  </button>
                 </div>
               </div>
 
