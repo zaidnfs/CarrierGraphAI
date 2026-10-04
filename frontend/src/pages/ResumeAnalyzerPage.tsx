@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorRetryCard } from '@/components/shared/ErrorRetryCard';
 import { ReiconAtsDoc } from '@/components/icons/Reicon';
 import { KoboyoSparkle } from '@/components/icons/Koboyo';
+import { SkillGapRecommendations } from '@/components/skills/SkillGapRecommendations';
 import {
   FileText,
   Briefcase,
@@ -414,7 +415,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   </div>
 
                   <p className="text-xs text-neutral-500">
-                    Target requirements missing from your resume (learning recommendations in Phase 3)
+                    Target requirements missing from your resume — curated learning resources shown below
                   </p>
 
                   {fitResult.missing_skills.length > 0 ? (
@@ -436,6 +437,11 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   )}
                 </div>
               </div>
+
+              {/* Skill-Gap Curated Learning Recommendations (Phase 3.1) */}
+              {fitResult.missing_skills.length > 0 && (
+                <SkillGapRecommendations missingSkills={fitResult.missing_skills} />
+              )}
             </div>
           )}
         </div>

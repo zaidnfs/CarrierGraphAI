@@ -44,6 +44,10 @@ from .resume_service import (
     ResumeValidationError,
     get_resume_service,
 )
+from .skill_recommendation_service import (
+    SkillRecommendationService,
+    get_skill_recommendation_service,
+)
 
 __all__ = [
     "get_job_service",
@@ -77,4 +81,6 @@ __all__ = [
     "ResumeParseError",
     "ResumeValidationError",
     "get_resume_service",
+    "SkillRecommendationService",
+    "get_skill_recommendation_service",
 ]

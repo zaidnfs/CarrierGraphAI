@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "apps.accounts",
     "apps.jobs",
     "apps.resumes",
+    "apps.skills",
 ]
 
 MIDDLEWARE = [
