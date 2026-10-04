@@ -41,3 +41,5 @@ export const DashboardStatsSkeleton: React.FC = () => {
     </div>
   );
 };
+
+export const LoadingSkeleton = CardListSkeleton;

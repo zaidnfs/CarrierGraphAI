@@ -48,6 +48,10 @@ from .skill_recommendation_service import (
     SkillRecommendationService,
     get_skill_recommendation_service,
 )
+from .interview_service import (
+    InterviewService,
+    get_interview_service,
+)
 
 __all__ = [
     "get_job_service",
@@ -83,4 +87,6 @@ __all__ = [
     "get_resume_service",
     "SkillRecommendationService",
     "get_skill_recommendation_service",
+    "InterviewService",
+    "get_interview_service",
 ]

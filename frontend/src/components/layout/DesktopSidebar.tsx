@@ -28,8 +28,6 @@ const navItems: NavItem[] = [
     name: 'AI Mock Interview',
     href: '/interviews',
     icon: KoboyoBrain,
-    disabled: true,
-    badge: 'Phase 3',
   },
 ];
 

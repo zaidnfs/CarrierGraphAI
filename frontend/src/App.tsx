@@ -8,6 +8,7 @@ import { SignupPage } from './pages/auth/SignupPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { JobExplorerPage } from './pages/JobExplorerPage';
 import { ResumeAnalyzerPage } from './pages/ResumeAnalyzerPage';
+import { MockInterviewPage } from './pages/MockInterviewPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { DesignShowcasePage } from './pages/DesignShowcasePage';
 
@@ -31,6 +32,7 @@ export const App: React.FC = () => {
               <Route path="/" element={<DashboardPage />} />
               <Route path="/jobs" element={<JobExplorerPage />} />
               <Route path="/resumes" element={<ResumeAnalyzerPage />} />
+              <Route path="/interviews" element={<MockInterviewPage />} />
             </Route>
           </Route>
 
