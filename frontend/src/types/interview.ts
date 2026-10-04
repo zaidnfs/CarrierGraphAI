@@ -88,3 +88,16 @@ export interface RoleSuggestion {
 export interface SuggestedRolesResponse {
   roles: RoleSuggestion[];
 }
+
+export interface AudioTranscriptionResponse {
+  text: string;
+  duration: number;
+  language: string;
+  confidence?: number;
+}
+
+export interface SpeechSynthesisPayload {
+  text: string;
+  voice?: string;
+}
+

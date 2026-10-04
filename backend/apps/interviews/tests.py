@@ -155,6 +155,31 @@ class InterviewServiceTestCase(TestCase):
         eval_res = self.service.evaluate_answer("Backend", "Q", "Python", [], "nope")
         self.assertEqual(eval_res["score"], 0)
 
+    def test_non_answer_phrases_score_zero(self):
+        non_answers = [
+            "i dont know",
+            "I don't know",
+            "no idea",
+            "not sure",
+            "idk",
+            "pass",
+            "skip this question",
+            "I cannot answer this",
+        ]
+        for phrase in non_answers:
+            res = self.service.evaluate_answer(
+                role_title="Backend Developer",
+                question_text="Explain Python GIL.",
+                skill_focus="Python",
+                expected_points=["GIL locks threads", "I/O releases lock"],
+                user_answer=phrase,
+            )
+            self.assertEqual(res["score"], 0, f"Failed for phrase: '{phrase}'")
+            self.assertEqual(res["strengths"], [], f"Strengths not empty for: '{phrase}'")
+            self.assertTrue(len(res["improvements"]) > 0)
+            self.assertTrue(len(res["ideal_answer"]) > 10)
+
+
 
 class InterviewAPITestCase(TestCase):
     """Tests for DRF endpoints in apps.interviews."""

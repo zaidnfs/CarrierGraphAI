@@ -141,3 +141,86 @@ class InterviewSessionListSerializer(serializers.ModelSerializer):
 
     def get_questions_answered(self, obj: InterviewSession) -> int:
         return obj.questions.filter(score__isnull=False).count()
+
+
+class AudioTranscriptionSerializer(serializers.Serializer):
+    """
+    Validates audio file upload for Speech-to-Text transcription (TASK-055).
+    """
+
+    audio = serializers.FileField(
+        required=True,
+        help_text="Audio file payload (WebM, WAV, OGG, MP4, up to 10MB)",
+    )
+    language = serializers.CharField(
+        max_length=10,
+        required=False,
+        default="en",
+        help_text="Spoken language code (default 'en')",
+    )
+    prompt = serializers.CharField(
+        max_length=200,
+        required=False,
+        default="",
+        help_text="Optional domain vocabulary context hint",
+    )
+
+    def validate_audio(self, value):
+        from django.conf import settings
+        max_size = getattr(settings, "MAX_AUDIO_UPLOAD_SIZE", 10 * 1024 * 1024)
+
+        if value.size == 0:
+            raise serializers.ValidationError("Audio file is empty.")
+
+        if value.size > max_size:
+            raise serializers.ValidationError(
+                f"Audio file size ({round(value.size / (1024 * 1024), 2)}MB) exceeds maximum allowed limit of {max_size // (1024 * 1024)}MB."
+            )
+
+        name = (value.name or "").lower()
+        content_type = (getattr(value, "content_type", "") or "").lower()
+
+        allowed_extensions = {".webm", ".wav", ".ogg", ".mp4", ".m4a", ".mp3"}
+        allowed_types = {
+            "audio/webm",
+            "audio/wav",
+            "audio/x-wav",
+            "audio/ogg",
+            "audio/mp4",
+            "audio/mpeg",
+            "audio/m4a",
+            "audio/x-m4a",
+            "video/webm",
+            "application/octet-stream",
+        }
+
+        has_valid_ext = any(name.endswith(ext) for ext in allowed_extensions)
+        has_valid_mime = content_type in allowed_types or content_type.startswith("audio/")
+
+        if not (has_valid_ext or has_valid_mime):
+            raise serializers.ValidationError(
+                "Unsupported audio format. Supported formats include WebM, WAV, OGG, MP4, and MP3."
+            )
+
+        return value
+
+
+class SpeechSynthesisSerializer(serializers.Serializer):
+    """
+    Validates input for text-to-speech synthesis (TASK-056).
+    """
+
+    text = serializers.CharField(
+        min_length=1,
+        max_length=3000,
+        required=True,
+        trim_whitespace=True,
+        help_text="Text to synthesize into speech",
+    )
+    voice = serializers.CharField(
+        max_length=100,
+        required=False,
+        default="",
+        help_text="Optional TTS voice identifier",
+    )
+

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   Sparkles,
   User as UserIcon,
@@ -6,13 +6,18 @@ import {
   Clock,
   ArrowRight,
   Flag,
+  Volume2,
+  VolumeX,
   RotateCcw,
+  Loader2,
 } from 'lucide-react';
 import { InterviewSession, InterviewQuestion } from '@/types/interview';
 import { KoboyoBrain, KoboyoSparkle } from '@/components/icons/Koboyo';
 import { QuestionFeedbackCard } from './QuestionFeedbackCard';
 import { AnswerInputBox } from './AnswerInputBox';
 import { InterviewSummaryReport } from './InterviewSummaryReport';
+import { VoiceModeToggle } from './VoiceModeToggle';
+import { useVoicePlayer } from '@/hooks/useVoicePlayer';
 import { cn } from '@/lib/utils';
 
 interface InterviewChatViewProps {
@@ -35,12 +40,50 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
   const currentIdx = session.current_question_index;
   const isCompleted = session.status === 'completed';
 
-  // Scroll to latest message or input box
+  // Voice Mode persistent state
+  const [voiceMode, setVoiceMode] = useState<boolean>(() => {
+    return localStorage.getItem('skillbridge_voice_mode') === 'true';
+  });
+
+  const handleToggleVoiceMode = (enabled: boolean) => {
+    setVoiceMode(enabled);
+    localStorage.setItem('skillbridge_voice_mode', String(enabled));
+    if (!enabled) {
+      stopSpeech();
+    }
+  };
+
+  const { isPlaying, isLoading: isAudioLoading, playSpeech, stopSpeech } = useVoicePlayer();
+  const [speakingQuestionId, setSpeakingQuestionId] = useState<string | null>(null);
+
+  // Auto-scroll to active message or input box
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [currentIdx, questions.length, isCompleted]);
 
   const activeQuestion = questions.find((q) => !q.answered_at) || questions[currentIdx];
+
+  // Auto-read question if voice mode is enabled when active question advances
+  useEffect(() => {
+    if (voiceMode && activeQuestion && !activeQuestion.answered_at && !isCompleted) {
+      setSpeakingQuestionId(activeQuestion.id);
+      playSpeech(activeQuestion.question_text, session.id);
+    }
+    // Cleanup on unmount or question change
+    return () => {
+      stopSpeech();
+    };
+  }, [activeQuestion?.id, voiceMode, isCompleted]);
+
+  const handlePlayQuestion = (q: InterviewQuestion) => {
+    if (isPlaying && speakingQuestionId === q.id) {
+      stopSpeech();
+      setSpeakingQuestionId(null);
+    } else {
+      setSpeakingQuestionId(q.id);
+      playSpeech(q.question_text, session.id);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -70,8 +113,9 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
           </div>
         </div>
 
-        {/* Stepper Progress Bar */}
-        <div className="flex items-center gap-4">
+        {/* Header Right Controls: Stepper, Voice Mode Toggle & Actions */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Stepper Progress Bar */}
           <div className="flex items-center gap-1.5">
             {questions.map((q, idx) => {
               const isAnswered = q.answered_at !== null;
@@ -98,6 +142,14 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
             })}
           </div>
 
+          {/* Voice Mode Toggle Switch */}
+          {!isCompleted && (
+            <VoiceModeToggle
+              voiceMode={voiceMode}
+              onToggle={handleToggleVoiceMode}
+            />
+          )}
+
           {!isCompleted && (
             <button
               type="button"
@@ -121,6 +173,7 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
 
           const isAnswered = q.answered_at !== null;
           const isCurrentActive = idx === currentIdx && !isCompleted;
+          const isThisQuestionSpeaking = isPlaying && speakingQuestionId === q.id;
 
           return (
             <div key={q.id || idx} className="space-y-4 animate-in fade-in-50 duration-300">
@@ -131,17 +184,46 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
                 </div>
 
                 <div className="flex-1 max-w-3xl space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#004D2F]">AI Interviewer</span>
-                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-[#F1F6F3] border border-[#D5E5DC] text-[#004D2F] font-mono">
-                      Question {q.order} of {session.total_questions}
-                    </span>
-                    {q.skill_focus && (
-                      <span className="text-[11px] px-2 py-0.5 rounded-md bg-white border border-[#D5E5DC] text-neutral-600 font-semibold">
-                        {q.skill_focus}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-[#004D2F]">AI Interviewer</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded-md bg-[#F1F6F3] border border-[#D5E5DC] text-[#004D2F] font-mono">
+                        Question {q.order} of {session.total_questions}
                       </span>
-                    )}
-                    <span className="text-[10px] text-neutral-400 capitalize">{q.difficulty}</span>
+                      {q.skill_focus && (
+                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-white border border-[#D5E5DC] text-neutral-600 font-semibold">
+                          {q.skill_focus}
+                        </span>
+                      )}
+                      <span className="text-[10px] text-neutral-400 capitalize">{q.difficulty}</span>
+                    </div>
+
+                    {/* Question Audio Read Button */}
+                    <button
+                      type="button"
+                      onClick={() => handlePlayQuestion(q)}
+                      className={cn(
+                        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all cursor-pointer',
+                        isThisQuestionSpeaking
+                          ? 'bg-[#E6F4ED] text-[#008855] border-[#008855]/40 shadow-xs'
+                          : 'bg-neutral-50 text-neutral-600 border-neutral-200 hover:bg-neutral-100 hover:text-neutral-900'
+                      )}
+                      title={isThisQuestionSpeaking ? 'Stop speaking' : 'Listen to question'}
+                    >
+                      {isAudioLoading && speakingQuestionId === q.id ? (
+                        <Loader2 size={12} className="animate-spin text-[#008855]" />
+                      ) : isThisQuestionSpeaking ? (
+                        <>
+                          <Volume2 size={13} className="text-[#008855] animate-pulse" />
+                          <span className="text-[11px] font-semibold text-[#008855]">Speaking...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Volume2 size={13} />
+                          <span className="text-[11px]">Listen</span>
+                        </>
+                      )}
+                    </button>
                   </div>
 
                   <div className="rounded-2xl rounded-tl-sm bg-white border border-[#D5E5DC] p-5 shadow-xs text-sm text-[#0A1A12] leading-relaxed">
@@ -195,6 +277,8 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
                     onSubmit={onSubmitAnswer}
                     isLoading={isSubmitting}
                     questionOrder={q.order}
+                    voiceMode={voiceMode}
+                    sessionId={session.id}
                   />
                 </div>
               )}

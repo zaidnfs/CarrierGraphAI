@@ -24,6 +24,18 @@ DEFAULT_ROLE_SKILLS: dict[str, list[str]] = {
     "software engineer": ["Python", "Data Structures", "Algorithms", "System Design", "Git", "SQL"],
 }
 
+NON_ANSWER_PATTERNS: list[str] = [
+    r"^(i\s*)?(do\s*not|don'?t)\s*know",
+    r"^(i\s*have\s*)?no\s*(idea|clue)",
+    r"^(not\s*sure|unsure)",
+    r"^(idk|dunno|pass|skip)",
+    r"^i\s*(can\s*not|can'?t)\s*answer",
+    r"^i\s*am\s*not\s*(sure|familiar|aware)",
+    r"^(nothing|none|n/a|na|no|nope)$",
+    r"^not\s*aware",
+    r"^(no\s*answer|blank|skip\s*this)",
+]
+
 FALLBACK_QUESTIONS: dict[str, list[dict[str, Any]]] = {
     "backend developer": [
         {
@@ -206,15 +218,19 @@ class InterviewService:
         role_clean = role_title.strip()
         matched_skills: list[str] = []
 
-        try:
-            records = self.graph_service.get_skills_for_role(role_clean, limit=limit)
-            if records:
-                for rec in records:
-                    s_name = rec.get("skill")
-                    if s_name and s_name not in matched_skills:
-                        matched_skills.append(s_name)
-        except Exception as exc:
-            logger.warning(f"Failed to query knowledge graph for role '{role_clean}': {exc}")
+        # Fast circuit-breaker check before attempting network query
+        if self.graph_service.is_available():
+            try:
+                records = self.graph_service.get_skills_for_role(role_clean, limit=limit)
+                if records:
+                    for rec in records:
+                        s_name = rec.get("skill")
+                        if s_name and s_name not in matched_skills:
+                            matched_skills.append(s_name)
+            except Exception as exc:
+                logger.warning(f"Failed to query knowledge graph for role '{role_clean}': {exc}")
+        else:
+            logger.debug(f"Knowledge Graph offline; utilizing curated default skills for role '{role_clean}'.")
 
         # If graph yielded few or no skills, augment with default role skills
         if len(matched_skills) < 3:
@@ -298,6 +314,17 @@ class InterviewService:
             logger.error(f"Error generating interview questions with LLM: {exc}")
             return self._fallback_questions(role_title, num_questions, difficulty)
 
+    @classmethod
+    def _is_non_answer(cls, user_answer: str) -> bool:
+        """Check if candidate's response is an admission of not knowing or a non-answer."""
+        ans = user_answer.strip().lower()
+        if not ans:
+            return False
+        for pat in NON_ANSWER_PATTERNS:
+            if re.search(pat, ans):
+                return True
+        return False
+
     def evaluate_answer(
         self,
         role_title: str,
@@ -311,15 +338,30 @@ class InterviewService:
         """
         cleaned_answer = (user_answer or "").strip()
 
-        # Handle empty or extremely short trivial answers
-        if len(cleaned_answer) < 10:
+        # Handle empty, trivial (<10 chars), or explicit non-answers ("I don't know", "no idea", "pass")
+        is_non_ans = self._is_non_answer(cleaned_answer)
+        if len(cleaned_answer) < 10 or is_non_ans:
+            ideal = (
+                f"A comprehensive answer for {skill_focus} should directly cover: "
+                + "; ".join(expected_points[:3])
+                if expected_points
+                else "A strong answer should define core mechanisms, cite relevant examples, and explain trade-offs."
+            )
+            accuracy_msg = (
+                "No substantive response was provided to evaluate. The candidate stated they do not know the answer."
+                if is_non_ans
+                else "No substantive response was provided to evaluate."
+            )
             return {
                 "score": 0,
-                "technical_accuracy": "No substantive response was provided to evaluate.",
-                "depth": "Response is too brief to demonstrate technical competence.",
+                "technical_accuracy": accuracy_msg,
+                "depth": "No technical explanation or architectural concepts were discussed.",
                 "strengths": [],
-                "improvements": ["Provide a detailed explanation covering technical architecture and key trade-offs."],
-                "ideal_answer": "A strong answer should define core mechanisms, cite relevant examples, and explain trade-offs.",
+                "improvements": [
+                    f"Study foundational principles and core concepts of {skill_focus}.",
+                    "Review the key expected criteria and model answer below to prepare for technical interview questions on this topic.",
+                ],
+                "ideal_answer": ideal,
             }
 
         # Check if LLM fallback mode is active or LLM is unreachable
@@ -485,29 +527,31 @@ class InterviewService:
 
         ratio = matched_criteria / max(1, len(expected_points))
 
-        if word_count < 20:
-            score = int(25 + ratio * 25)
-        elif word_count < 60:
-            score = int(50 + ratio * 30)
+        if matched_criteria == 0:
+            score = 0 if word_count < 25 else min(15, int(word_count / 10))
+            strengths = [] if score == 0 else [f"Attempted to formulate response for {skill_focus}"]
+            technical_accuracy = "Candidate did not address any of the expected technical criteria."
         else:
-            score = int(65 + ratio * 30)
-
-        score = max(20, min(score, 95))
+            base_score = int(ratio * 70)
+            depth_bonus = min(25, int((word_count / 60) * 25))
+            score = max(20, min(95, base_score + depth_bonus))
+            strengths = [
+                f"Demonstrated awareness of {skill_focus}",
+                f"Addressed {matched_criteria} key architectural criteria",
+            ]
+            technical_accuracy = (
+                f"Candidate addressed {matched_criteria} of {len(expected_points)} core criteria "
+                f"for {skill_focus}."
+            )
 
         return {
             "score": score,
-            "technical_accuracy": (
-                f"Candidate addressed {matched_criteria} of {len(expected_points)} core criteria "
-                f"for {skill_focus}."
-            ),
+            "technical_accuracy": technical_accuracy,
             "depth": (
                 f"Response length ({word_count} words) provides "
-                f"{'solid' if word_count >= 50 else 'moderate'} technical detail."
+                f"{'solid' if word_count >= 50 else 'moderate' if word_count >= 20 else 'minimal'} technical detail."
             ),
-            "strengths": [
-                f"Demonstrated awareness of {skill_focus}",
-                "Structured answer addressing technical question",
-            ],
+            "strengths": strengths,
             "improvements": [
                 "Mention concrete production trade-offs and edge cases",
                 "Elaborate on real-world system architecture context",
@@ -515,6 +559,8 @@ class InterviewService:
             "ideal_answer": (
                 f"A comprehensive answer for {skill_focus} should directly cover: "
                 + "; ".join(expected_points[:3])
+                if expected_points
+                else f"Review core engineering principles and architecture patterns for {skill_focus}."
             ),
         }
 

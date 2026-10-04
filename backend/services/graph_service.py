@@ -4,6 +4,7 @@ Interfaces with Neo4j to manage the graph schema (Roles, Skills, Companies, Loca
 and execute graph queries, analytics, and ingestion pipelines.
 """
 import logging
+import time
 from typing import Any
 
 from django.conf import settings
@@ -41,6 +42,7 @@ class GraphService:
         database: str | None = None,
         max_connection_pool_size: int | None = None,
         connection_timeout: float | None = None,
+        max_transaction_retry_time: float | None = None,
     ):
         self.uri = uri or getattr(settings, "NEO4J_URI", "bolt://localhost:7687")
         self.user = user or getattr(settings, "NEO4J_USER", "neo4j")
@@ -50,9 +52,13 @@ class GraphService:
             settings, "NEO4J_MAX_CONNECTION_POOL_SIZE", 50
         )
         self.connection_timeout = connection_timeout or getattr(
-            settings, "NEO4J_CONNECTION_TIMEOUT", 2.0
+            settings, "NEO4J_CONNECTION_TIMEOUT", 1.5
+        )
+        self.max_transaction_retry_time = max_transaction_retry_time or getattr(
+            settings, "NEO4J_MAX_RETRY_TIME", 1.0
         )
         self._driver: Driver | None = None
+        self._offline_until: float = 0.0
 
     @property
     def driver(self) -> Driver:
@@ -67,6 +73,7 @@ class GraphService:
                     auth=auth,
                     max_connection_pool_size=self.max_pool_size,
                     connection_timeout=self.connection_timeout,
+                    max_transaction_retry_time=self.max_transaction_retry_time,
                 )
             except Exception as exc:
                 logger.error(f"Failed to initialize Neo4j driver at {self.uri}: {exc}")
@@ -83,17 +90,28 @@ class GraphService:
         """Allow deleting or resetting the driver instance."""
         self._driver = None
 
+    def is_available(self) -> bool:
+        """
+        Fast non-blocking connectivity check protected by a circuit breaker.
+        Returns False immediately if Neo4j is known to be offline.
+        """
+        if time.time() < self._offline_until:
+            return False
+
+        try:
+            self.driver.verify_connectivity()
+            return True
+        except Exception as exc:
+            self._offline_until = time.time() + 60.0  # 60 second cooldown
+            logger.info(f"Neo4j offline ({exc}); circuit breaker active for 60s.")
+            return False
+
     def verify_connectivity(self) -> bool:
         """
         Verify connection to the Neo4j database.
         Returns True if reachable and authenticated, False otherwise.
         """
-        try:
-            self.driver.verify_connectivity()
-            return True
-        except Exception as exc:
-            logger.warning(f"Neo4j connectivity check failed: {exc}")
-            return False
+        return self.is_available()
 
     def close(self) -> None:
         """
@@ -117,6 +135,9 @@ class GraphService:
         Execute a parameterized Cypher query and return results as a list of dicts.
         Parameterization is strictly enforced to prevent Cypher injection.
         """
+        if time.time() < self._offline_until:
+            raise GraphConnectionError("Neo4j database is unreachable (circuit breaker active)")
+
         parameters = parameters or {}
         try:
             with self.driver.session(database=self.database) as session:
@@ -130,6 +151,7 @@ class GraphService:
                     )
                 return result
         except (neo4j_exceptions.ServiceUnavailable, neo4j_exceptions.AuthError) as exc:
+            self._offline_until = time.time() + 60.0
             logger.error(f"Neo4j connection error during query execution: {exc}")
             raise GraphConnectionError(f"Neo4j connection error: {exc}") from exc
         except (

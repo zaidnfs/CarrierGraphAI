@@ -32,3 +32,8 @@ QDRANT_IN_MEMORY = True
 # LLM test overrides
 LLM_FALLBACK_MODE = True
 OLLAMA_TIMEOUT = 0.5
+
+# Speech & Audio test overrides (Phase 3.3)
+WHISPER_MOCK_MODE = True
+TTS_PROVIDER = "mock"
+

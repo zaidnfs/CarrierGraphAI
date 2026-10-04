@@ -52,6 +52,14 @@ from .interview_service import (
     InterviewService,
     get_interview_service,
 )
+from .speech_service import (
+    SpeechService,
+    get_speech_service,
+)
+from .tts_service import (
+    TTSService,
+    get_tts_service,
+)
 
 __all__ = [
     "get_job_service",
@@ -89,4 +97,9 @@ __all__ = [
     "get_skill_recommendation_service",
     "InterviewService",
     "get_interview_service",
+    "SpeechService",
+    "get_speech_service",
+    "TTSService",
+    "get_tts_service",
 ]
+

@@ -6,6 +6,7 @@ import {
   SubmitAnswerPayload,
   SubmitAnswerResponse,
   SuggestedRolesResponse,
+  AudioTranscriptionResponse,
 } from '../types/interview';
 
 export const interviewService = {
@@ -48,6 +49,52 @@ export const interviewService = {
   },
 
   /**
+   * Transcribe recorded candidate audio into text via backend faster-whisper (TASK-055).
+   */
+  async transcribeAudio(
+    audioBlob: Blob,
+    sessionId?: string,
+    language: string = 'en'
+  ): Promise<AudioTranscriptionResponse> {
+    const formData = new FormData();
+    const filename = audioBlob.type.includes('wav') ? 'answer.wav' : 'answer.webm';
+    formData.append('audio', audioBlob, filename);
+    formData.append('language', language);
+
+    const url = sessionId
+      ? `/interviews/sessions/${sessionId}/transcribe/`
+      : '/interviews/transcribe/';
+
+    const response = await api.post<AudioTranscriptionResponse>(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  /**
+   * Synthesize question or feedback text to spoken audio stream via Piper TTS (TASK-056).
+   */
+  async synthesizeSpeech(text: string, voice?: string, sessionId?: string): Promise<Blob> {
+    const url = sessionId
+      ? `/interviews/sessions/${sessionId}/synthesize/`
+      : '/interviews/synthesize/';
+
+    const response = await api.post(
+      url,
+      { text, voice: voice || '' },
+      {
+        responseType: 'blob',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return response.data;
+  },
+
+  /**
    * Finalize a session and calculate overall readiness summary.
    */
   async completeSession(sessionId: string): Promise<InterviewSession> {
@@ -72,3 +119,4 @@ export const interviewService = {
     return response.data;
   },
 };
+

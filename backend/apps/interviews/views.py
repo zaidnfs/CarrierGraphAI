@@ -4,9 +4,12 @@ Enforces strict JWT authentication, user-scoped authorization (IDOR prevention),
 and transactionally safe session question generation and evaluation.
 """
 from typing import Any
+import logging
 from django.db import transaction
+from django.http import HttpResponse
 from django.utils import timezone
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -19,8 +22,14 @@ from apps.interviews.serializers import (
     InterviewQuestionPublicSerializer,
     InterviewSessionDetailSerializer,
     InterviewSessionListSerializer,
+    AudioTranscriptionSerializer,
+    SpeechSynthesisSerializer,
 )
 from services.interview_service import get_interview_service
+from services.speech_service import get_speech_service
+from services.tts_service import get_tts_service
+
+logger = logging.getLogger(__name__)
 
 
 class InterviewSessionListCreateView(APIView):
@@ -266,3 +275,93 @@ class SuggestedRolesView(APIView):
             })
 
         return Response({"roles": roles_payload}, status=status.HTTP_200_OK)
+
+
+class TranscribeAudioView(APIView):
+    """
+    Transcribe spoken technical audio into text using faster-whisper (TASK-055).
+    """
+
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request: Request, session_id: str | None = None) -> Response:
+        if session_id:
+            try:
+                session = InterviewSession.objects.get(id=session_id, user=request.user)
+                if session.status == "completed":
+                    return Response(
+                        {"detail": "Cannot transcribe audio for a completed interview session."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+            except (InterviewSession.DoesNotExist, ValueError):
+                return Response(
+                    {"detail": "Interview session not found or access denied."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+        serializer = AudioTranscriptionSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        audio_file = serializer.validated_data["audio"]
+        language = serializer.validated_data.get("language", "en")
+        prompt = serializer.validated_data.get("prompt", "")
+
+        try:
+            svc = get_speech_service()
+            result = svc.transcribe_audio(audio_file, language=language, prompt=prompt)
+            return Response(result, status=status.HTTP_200_OK)
+        except ValueError as ve:
+            return Response({"detail": str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"Transcription view error: {e}", exc_info=True)
+            return Response(
+                {"detail": "Failed to transcribe audio. Please try again or type your answer."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class SynthesizeSpeechView(APIView):
+    """
+    Synthesize plain or markdown text into audio stream using Piper TTS (TASK-056).
+    """
+
+    permission_classes = [IsAuthenticated]
+    parser_classes = [JSONParser, FormParser]
+
+    def post(self, request: Request, session_id: str | None = None) -> HttpResponse | Response:
+        if session_id:
+            try:
+                InterviewSession.objects.get(id=session_id, user=request.user)
+            except (InterviewSession.DoesNotExist, ValueError):
+                return Response(
+                    {"detail": "Interview session not found or access denied."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+        serializer = SpeechSynthesisSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        text = serializer.validated_data["text"]
+        voice = serializer.validated_data.get("voice", "")
+
+        try:
+            tts_svc = get_tts_service()
+            wav_bytes = tts_svc.synthesize_speech(text, voice=voice)
+
+            response = HttpResponse(wav_bytes, content_type="audio/wav", status=status.HTTP_200_OK)
+            response["Content-Disposition"] = 'inline; filename="interview_speech.wav"'
+            response["Content-Length"] = str(len(wav_bytes))
+            response["Cache-Control"] = "public, max-age=86400"
+            return response
+        except ValueError as ve:
+            return Response({"detail": str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"Speech synthesis view error: {e}", exc_info=True)
+            return Response(
+                {"detail": "Failed to synthesize speech audio."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
