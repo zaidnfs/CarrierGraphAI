@@ -24,6 +24,7 @@ import { SpotlightCard } from '../components/reactbits/SpotlightCard';
 import { DecryptedText } from '../components/reactbits/DecryptedText';
 import { GradientText } from '../components/reactbits/GradientText';
 import { AnimatedNumber } from '../components/reactbits/AnimatedNumber';
+import { LibrariesDevShowcase } from '../components/dashboard/LibrariesDevShowcase';
 
 // Handcrafted Modern Icons (Reicon & Koboyo)
 import {
@@ -59,7 +60,7 @@ const PALETTE = [
 
 export const DesignShowcasePage: React.FC = () => {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [segmentedTab, setSegmentedTab] = useState<'overview' | 'dynamic' | 'icons'>('overview');
+  const [segmentedTab, setSegmentedTab] = useState<'overview' | 'ai' | 'dynamic' | 'icons'>('overview');
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
   const [queryInput, setQueryInput] = useState('What backend skills are most in demand in Bengaluru?');
@@ -540,12 +541,12 @@ export const DesignShowcasePage: React.FC = () => {
           </div>
 
           {/* Underline Tabs */}
-          <div className="flex items-center gap-6 text-sm">
-            {(['overview', 'dynamic', 'icons'] as const).map((tab) => (
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm">
+            {(['overview', 'ai', 'dynamic', 'icons'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setSegmentedTab(tab)}
-                className={`pb-2 capitalize font-semibold transition-all relative ${
+                className={`pb-2 capitalize font-semibold transition-all relative cursor-pointer ${
                   segmentedTab === tab
                     ? isDark
                       ? 'text-[rgba(76,214,129,1)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[rgba(76,214,129,1)]'
@@ -555,7 +556,13 @@ export const DesignShowcasePage: React.FC = () => {
                     : 'text-neutral-600 hover:text-[#004D2F]'
                 }`}
               >
-                {tab === 'dynamic' ? 'React Bits Playground' : tab === 'icons' ? 'Reicon & Koboyo Icons' : 'Overview Bento'}
+                {tab === 'ai'
+                  ? 'AI Living Effects (libraries.dev)'
+                  : tab === 'dynamic'
+                  ? 'React Bits Playground'
+                  : tab === 'icons'
+                  ? 'Reicon & Koboyo Icons'
+                  : 'Overview Bento'}
               </button>
             ))}
           </div>
@@ -922,6 +929,11 @@ export const DesignShowcasePage: React.FC = () => {
               </div>
             </SpotlightCard>
           </div>
+        )}
+
+        {/* Tab: Libraries.dev AI Living Effects (Thinking Orbs, Bot Avatars, Voice Glow, Border Beam) */}
+        {segmentedTab === 'ai' && (
+          <LibrariesDevShowcase isDark={isDark} />
         )}
 
         {/* Tab 2: React Bits Dynamic Playground */}

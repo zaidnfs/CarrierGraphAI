@@ -24,6 +24,8 @@ import { InterviewChatView } from '@/components/interviews/InterviewChatView';
 import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorRetryCard } from '@/components/shared/ErrorRetryCard';
+import { AIBotAvatar } from '@/components/interviews/AIBotAvatar';
+import { AILoadingState } from '@/components/shared/AILoadingState';
 import { KoboyoBrain, KoboyoSparkle } from '@/components/icons/Koboyo';
 import { cn } from '@/lib/utils';
 
@@ -235,19 +237,22 @@ export const MockInterviewPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Start Hero Card */}
-          <div className="rounded-3xl border border-[#D5E5DC] bg-gradient-to-r from-[#EEF7F1] to-white p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 max-w-xl text-center md:text-left">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white border border-[#BBDDCB] text-[#004D2F] shadow-2xs">
-                <KoboyoSparkle size={13} />
-                Knowledge Graph Grounded
-              </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-[#0A1A12] tracking-tight">
-                Ready to practice for your target placement role?
-              </h2>
-              <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                Choose a role like <span className="font-semibold text-[#004D2F]">Backend Developer</span> or <span className="font-semibold text-[#004D2F]">Frontend Developer</span>. The AI interviewer generates authentic, scenario-based questions tested against industry expectations.
-              </p>
+          {/* Quick Start Hero Card with Bot Mascot */}
+          <div className="rounded-3xl border border-[#D5E5DC] bg-gradient-to-r from-[#EEF7F1] via-white to-[#F4F9F6] p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <div className="flex items-center gap-5">
+              <AIBotAvatar type="droid" size={68} headphones={true} statusIndicator="online" />
+              <div className="space-y-1.5 max-w-xl text-center md:text-left">
+                <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-bold bg-white border border-[#BBDDCB] text-[#004D2F] shadow-2xs">
+                  <KoboyoSparkle size={13} />
+                  Knowledge Graph Grounded
+                </span>
+                <h2 className="text-xl sm:text-2xl font-bold text-[#0A1A12] tracking-tight">
+                  Ready to practice for your target placement role?
+                </h2>
+                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                  Choose roles like <span className="font-semibold text-[#004D2F]">Backend Developer</span> or <span className="font-semibold text-[#004D2F]">Frontend Developer</span>. The AI interviewer generates authentic, scenario-based questions tested against live industry expectations.
+                </p>
+              </div>
             </div>
 
             <button
@@ -273,7 +278,14 @@ export const MockInterviewPage: React.FC = () => {
             </div>
 
             {isLoading ? (
-              <LoadingSkeleton count={3} />
+              <div className="p-8 bg-white rounded-2xl border border-[#D5E5DC]">
+                <AILoadingState
+                  state="working"
+                  title="Loading Interview History"
+                  description="Retrieving your past interview sessions and telemetry from the knowledge graph..."
+                  card={false}
+                />
+              </div>
             ) : sessions.length === 0 ? (
               <EmptyState
                 icon={Brain}

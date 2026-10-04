@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Eye, EyeOff, AlertCircle, ArrowRight, Check } from 'lucide-react';
 import { KoboyoSparkle } from '@/components/icons/Koboyo';
+import { AIThinkingOrb } from '@/components/shared/AIThinkingOrb';
+import { AIBotAvatar } from '@/components/interviews/AIBotAvatar';
 import authHeroImg from '@/assets/auth-hero.jpg';
 
 const GoogleIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
@@ -95,6 +97,8 @@ export const SignupPage: React.FC = () => {
     setIsLoading(true);
     setErrorMessage(null);
 
+    const startTime = Date.now();
+
     try {
       await register({
         first_name: firstName,
@@ -102,8 +106,17 @@ export const SignupPage: React.FC = () => {
         email,
         password,
       });
+      // Ensure the user clearly sees and perceives the AI synthesis sequence
+      const elapsed = Date.now() - startTime;
+      if (elapsed < 850) {
+        await new Promise((resolve) => setTimeout(resolve, 850 - elapsed));
+      }
       navigate('/');
     } catch (err: any) {
+      const elapsed = Date.now() - startTime;
+      if (elapsed < 400) {
+        await new Promise((resolve) => setTimeout(resolve, 400 - elapsed));
+      }
       const data = err.response?.data;
       let msg = 'Registration failed. Please check your information and try again.';
       if (typeof data === 'object') {
@@ -128,9 +141,35 @@ export const SignupPage: React.FC = () => {
       <div className="w-full max-w-[1080px] min-h-[660px] bg-white rounded-3xl border border-[#E2E8E5] shadow-[0_20px_50px_-15px_rgba(0,35,20,0.06)] overflow-hidden flex flex-col lg:flex-row">
         
         {/* =========================================================================
-            LEFT 55% PANEL: Clean Minimalist Signup Form
+            LEFT 55% PANEL: Clean Minimalist Signup Form with AI Loading Overlay
             ========================================================================= */}
-        <div className="w-full lg:w-[55%] flex flex-col justify-between p-8 sm:p-12 xl:p-14 bg-white">
+        <div className="w-full lg:w-[55%] flex flex-col justify-between p-8 sm:p-12 xl:p-14 bg-white relative">
+          {/* Active AI Signup Loading Overlay */}
+          {isLoading && (
+            <div className="absolute inset-0 z-30 bg-white/95 backdrop-blur-md rounded-3xl lg:rounded-r-none flex flex-col items-center justify-center p-8 text-center animate-in fade-in-50 duration-200">
+              <div className="relative mb-6 flex items-center justify-center">
+                <AIThinkingOrb state="weaving" size={130} color="#008855" dotSize={1.4} />
+                <div className="absolute -bottom-2 -right-3 z-10 shadow-lg rounded-full bg-white p-1 border border-[#D5E5DC]">
+                  <AIBotAvatar type="clover" size={44} headphones={true} state="working" />
+                </div>
+              </div>
+
+              <div className="space-y-2 max-w-sm mx-auto">
+                <h3 className="text-xl font-bold text-[#0A1A12] tracking-tight">
+                  Synthesizing Candidate Profile
+                </h3>
+                <p className="text-xs text-neutral-500 leading-relaxed">
+                  Initializing your personal skill vector and setting up Knowledge Graph workspace...
+                </p>
+
+                <div className="pt-2 flex items-center justify-center gap-2 text-[11px] font-mono font-semibold text-[#008855] bg-[#EEF7F1] border border-[#D6E8DD] py-1 px-3.5 rounded-full mx-auto w-fit">
+                  <span className="h-2 w-2 rounded-full bg-[#008855] animate-ping" />
+                  <span>Preparing placement intelligence</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Top Brand Header & Switch Link */}
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2.5 group">
@@ -316,10 +355,10 @@ export const SignupPage: React.FC = () => {
                 className="w-full h-11 rounded-full text-sm font-semibold transition-all active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer mt-2 bg-[#008855] text-white hover:bg-[#007347] shadow-md shadow-[#008855]/20 hover:shadow-lg hover:shadow-[#008855]/25"
               >
                 {isLoading ? (
-                  <>
-                    <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  <div className="flex items-center gap-2">
+                    <AIThinkingOrb state="weaving" size={20} color="#FFFFFF" />
                     <span>Creating account...</span>
-                  </>
+                  </div>
                 ) : (
                   <>
                     <span>Create Account</span>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Mic, Square, RotateCcw, X, Loader2, Sparkles, AlertCircle } from 'lucide-react';
+import { Mic, Square, RotateCcw, X, Sparkles, AlertCircle } from 'lucide-react';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 import { interviewService } from '@/services/interviewService';
 import { AudioWaveVisualizer } from './AudioWaveVisualizer';
+import { AIThinkingOrb } from '@/components/shared/AIThinkingOrb';
+import { VoiceBeam } from 'voice-glow';
 import { cn } from '@/lib/utils';
 
 interface VoiceAnswerRecorderProps {
@@ -20,6 +22,7 @@ export const VoiceAnswerRecorder: React.FC<VoiceAnswerRecorderProps> = ({
     isRecording,
     formattedDuration,
     volumeLevel,
+    stream,
     error: recordError,
     startRecording,
     stopRecording,
@@ -69,21 +72,27 @@ export const VoiceAnswerRecorder: React.FC<VoiceAnswerRecorderProps> = ({
 
   const activeError = recordError || transcribeError;
 
-  return (
+  const cardContent = (
     <div className="w-full bg-[#FAFCFB] border border-[#D5E5DC] rounded-xl p-3.5 transition-all">
       {/* Active Recording View */}
       {isRecording ? (
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
-              </span>
-              <span className="text-xs font-semibold text-neutral-800">
-                Listening to your answer...
-              </span>
-              <span className="font-mono text-xs font-bold text-[#008855] bg-[#E6F4ED] px-2 py-0.5 rounded-md">
+            <div className="flex items-center gap-3">
+              <AIThinkingOrb state="listening" size={42} color="#008855" dotSize={1.25} />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                  </span>
+                  <span className="text-xs font-bold text-neutral-800">
+                    Listening to your response...
+                  </span>
+                </div>
+                <p className="text-[11px] text-neutral-400">Speak clearly, sound-reactive glow active</p>
+              </div>
+              <span className="font-mono text-xs font-bold text-[#008855] bg-[#E6F4ED] px-2 py-0.5 rounded-md ml-auto sm:ml-2">
                 {formattedDuration}
               </span>
             </div>
@@ -91,7 +100,7 @@ export const VoiceAnswerRecorder: React.FC<VoiceAnswerRecorderProps> = ({
             <button
               type="button"
               onClick={handleCancel}
-              className="p-1 rounded-md text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 transition-colors"
+              className="p-1 rounded-md text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer"
               title="Cancel recording"
             >
               <X size={16} />
@@ -99,14 +108,14 @@ export const VoiceAnswerRecorder: React.FC<VoiceAnswerRecorderProps> = ({
           </div>
 
           {/* Dynamic Audio Wave Visualizer */}
-          <AudioWaveVisualizer isRecording={isRecording} volumeLevel={volumeLevel} barsCount={28} />
+          <AudioWaveVisualizer isRecording={isRecording} volumeLevel={volumeLevel} barsCount={30} />
 
           {/* Action controls while recording */}
           <div className="flex items-center justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={handleCancel}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer"
             >
               <RotateCcw size={13} />
               <span>Cancel</span>
@@ -123,12 +132,17 @@ export const VoiceAnswerRecorder: React.FC<VoiceAnswerRecorderProps> = ({
           </div>
         </div>
       ) : isTranscribing ? (
-        /* Transcribing Loading State */
-        <div className="flex items-center justify-center gap-3 py-3 text-xs text-[#008855]">
-          <Loader2 size={16} className="animate-spin text-[#008855]" />
-          <span className="font-medium">
-            Transcribing with faster-whisper (CTranslate2)...
-          </span>
+        /* Transcribing Loading State with ThinkingOrb */
+        <div className="py-2 px-1">
+          <AIThinkingOrb
+            state="weaving"
+            size={44}
+            color="#008855"
+            dotSize={1.25}
+            inline={true}
+            label={<span className="text-xs font-bold text-[#004D2F]">Transcribing speech with faster-whisper...</span>}
+            sublabel="CTranslate2 INT8 optimized neural speech recognition"
+          />
         </div>
       ) : (
         /* Idle Prompt State */
@@ -173,4 +187,14 @@ export const VoiceAnswerRecorder: React.FC<VoiceAnswerRecorderProps> = ({
       )}
     </div>
   );
+
+  if (isRecording && stream) {
+    return (
+      <VoiceBeam stream={stream} colorVariant="forest" theme="light">
+        {cardContent}
+      </VoiceBeam>
+    );
+  }
+
+  return cardContent;
 };

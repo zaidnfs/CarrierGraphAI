@@ -14,6 +14,8 @@ import { InteractiveMarketTrendsChart } from '@/components/dashboard/Interactive
 import { KoboyoSparkle, KoboyoBrain } from '@/components/icons/Koboyo';
 import { ReiconGraph, ReiconRadar, ReiconAtsDoc } from '@/components/icons/Reicon';
 import { AnimatedNumber } from '@/components/reactbits/AnimatedNumber';
+import { AIBotAvatar } from '@/components/interviews/AIBotAvatar';
+import { AIThinkingOrb } from '@/components/shared/AIThinkingOrb';
 import {
   FileText,
   Briefcase,
@@ -84,20 +86,23 @@ export const DashboardPage: React.FC = () => {
           }}
         />
 
-        <div className="space-y-2.5 max-w-xl relative z-10">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-xs font-semibold bg-[#EEF7F1] text-[#004D2F] border border-[#D6E8DD] font-mono">
-            <KoboyoSparkle size={13} strokeWidth={2.2} />
-            <span className="uppercase tracking-wider text-[11px]">Placement Intelligence v2.3</span>
+        <div className="flex items-center gap-4 relative z-10 max-w-xl">
+          <AIBotAvatar type="droid" size={54} headphones={true} statusIndicator="online" className="hidden sm:inline-flex shrink-0" />
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-xs font-semibold bg-[#EEF7F1] text-[#004D2F] border border-[#D6E8DD] font-mono">
+              <KoboyoSparkle size={13} strokeWidth={2.2} />
+              <span className="uppercase tracking-wider text-[11px]">Placement Intelligence v2.3</span>
+            </div>
+
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#0A1A12]">
+              Welcome back, {user?.first_name || 'Student'}!
+            </h1>
+
+            <p className="text-sm text-neutral-600 leading-relaxed">
+              SkillBridge AI unifies campus job trends, ATS resume tailoring, and skill calibration around a{' '}
+              <span className="font-semibold text-[#008855]">grounded Neo4j knowledge graph</span> and vector retrieval system.
+            </p>
           </div>
-
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#0A1A12]">
-            Welcome back, {user?.first_name || 'Student'}!
-          </h1>
-
-          <p className="text-sm text-neutral-600 leading-relaxed">
-            SkillBridge AI unifies campus job trends, ATS resume tailoring, and skill calibration around a{' '}
-            <span className="font-semibold text-[#008855]">grounded Neo4j knowledge graph</span> and vector retrieval system.
-          </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0 relative z-10">
@@ -137,7 +142,9 @@ export const DashboardPage: React.FC = () => {
 
             <div className="text-2xl font-bold font-mono text-[#0A1A12]">
               {isLoading ? (
-                '...'
+                <div className="py-1">
+                  <AIThinkingOrb state="working" size={20} color="#008855" />
+                </div>
               ) : (
                 <AnimatedNumber value={hoveredJobVal ?? (jobCount ?? 1240)} suffix="+" />
               )}
@@ -184,7 +191,9 @@ export const DashboardPage: React.FC = () => {
 
             <div className="text-2xl font-bold font-mono text-[#0A1A12]">
               {isLoading ? (
-                '...'
+                <div className="py-1">
+                  <AIThinkingOrb state="working" size={20} color="#008855" />
+                </div>
               ) : (
                 <AnimatedNumber value={resumeCount ?? 0} />
               )}

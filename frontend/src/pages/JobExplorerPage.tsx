@@ -6,6 +6,8 @@ import { JobDetailModal } from '@/components/jobs/JobDetailModal';
 import { CardListSkeleton } from '@/components/shared/LoadingSkeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorRetryCard } from '@/components/shared/ErrorRetryCard';
+import { AIThinkingOrb } from '@/components/shared/AIThinkingOrb';
+import { AILoadingState } from '@/components/shared/AILoadingState';
 import { ReiconRadar } from '@/components/icons/Reicon';
 import { Search, Briefcase, RefreshCw, X } from 'lucide-react';
 
@@ -89,8 +91,17 @@ export const JobExplorerPage: React.FC = () => {
           disabled={isLoading}
           className="self-start sm:self-auto h-9 px-4 rounded-full text-xs font-semibold text-neutral-700 bg-white border border-neutral-200 hover:bg-neutral-50 active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
         >
-          <RefreshCw className={`h-3.5 w-3.5 text-neutral-500 ${isLoading ? 'animate-spin' : ''}`} />
-          <span>Refresh Listings</span>
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <AIThinkingOrb state="searching" size={20} color="#008855" />
+              <span>Querying...</span>
+            </div>
+          ) : (
+            <>
+              <RefreshCw className="h-3.5 w-3.5 text-neutral-500" />
+              <span>Refresh Listings</span>
+            </>
+          )}
         </button>
       </div>
 
@@ -164,7 +175,13 @@ export const JobExplorerPage: React.FC = () => {
 
       {/* Content Feed */}
       {isLoading ? (
-        <CardListSkeleton count={6} />
+        <AILoadingState
+          state="searching"
+          size="md"
+          title="Querying Live Job Market & Knowledge Graph"
+          description="Fetching verified placement roles, filtering location preferences, and matching skill requirements..."
+          card={true}
+        />
       ) : error ? (
         <ErrorRetryCard message={error} onRetry={fetchJobs} />
       ) : jobs.length === 0 ? (

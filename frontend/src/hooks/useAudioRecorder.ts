@@ -7,6 +7,7 @@ export interface AudioRecorderState {
   audioBlob: Blob | null;
   audioUrl: string | null;
   volumeLevel: number; // 0 to 100 for visualizers
+  stream: MediaStream | null;
   error: string | null;
 }
 
@@ -25,6 +26,7 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [volumeLevel, setVolumeLevel] = useState(0);
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -87,6 +89,7 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
         },
       });
       streamRef.current = stream;
+      setStream(stream);
 
       // Web Audio setup for visualizer
       try {
@@ -180,6 +183,7 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
           streamRef.current.getTracks().forEach((track) => track.stop());
           streamRef.current = null;
         }
+        setStream(null);
 
         resolve(blob);
       };
@@ -198,6 +202,7 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
+    setStream(null);
     chunksRef.current = [];
     setIsRecording(false);
     setIsPaused(false);
@@ -230,6 +235,7 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
     audioBlob,
     audioUrl,
     volumeLevel,
+    stream,
     error,
     startRecording,
     stopRecording,

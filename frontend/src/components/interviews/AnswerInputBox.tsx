@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, CornerDownLeft, AlertCircle, CheckCircle2, Mic, Keyboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { VoiceAnswerRecorder } from './VoiceAnswerRecorder';
+import { AIThinkingOrb } from '@/components/shared/AIThinkingOrb';
 
 interface AnswerInputBoxProps {
   onSubmit: (answer: string) => Promise<void>;
@@ -195,10 +196,10 @@ export const AnswerInputBox: React.FC<AnswerInputBoxProps> = ({
             )}
           >
             {isLoading ? (
-              <>
-                <div className="h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Evaluating...</span>
-              </>
+              <div className="flex items-center gap-2">
+                <AIThinkingOrb state="solving" size={20} color="#FFFFFF" />
+                <span>Evaluating Response...</span>
+              </div>
             ) : (
               <>
                 <span>Submit Answer</span>

@@ -18,6 +18,8 @@ import { AnswerInputBox } from './AnswerInputBox';
 import { InterviewSummaryReport } from './InterviewSummaryReport';
 import { VoiceModeToggle } from './VoiceModeToggle';
 import { useVoicePlayer } from '@/hooks/useVoicePlayer';
+import { AIBotAvatar } from './AIBotAvatar';
+import { AIThinkingOrb } from '@/components/shared/AIThinkingOrb';
 import { cn } from '@/lib/utils';
 
 interface InterviewChatViewProps {
@@ -90,9 +92,7 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
       {/* Session Progress Header */}
       <div className="bg-white border border-[#D5E5DC] rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-[#008855] text-white flex items-center justify-center shadow-xs shrink-0">
-            <KoboyoBrain size={20} />
-          </div>
+          <AIBotAvatar type="droid" size={42} headphones={true} statusIndicator="online" />
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-bold text-[#0A1A12]">{session.role_title}</h2>
@@ -177,11 +177,16 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
 
           return (
             <div key={q.id || idx} className="space-y-4 animate-in fade-in-50 duration-300">
-              {/* Interviewer Message Bubble */}
+              {/* Interviewer Message Bubble with Living Bot Avatar */}
               <div className="flex items-start gap-3">
-                <div className="h-9 w-9 rounded-xl bg-[#004D2F] text-white flex items-center justify-center shadow-xs shrink-0 mt-0.5">
-                  <KoboyoSparkle size={18} />
-                </div>
+                <AIBotAvatar
+                  type="droid"
+                  size={42}
+                  state={isThisQuestionSpeaking ? 'working' : isSubmitting && isCurrentActive ? 'working' : 'default'}
+                  headphones={true}
+                  statusIndicator={isThisQuestionSpeaking ? 'speaking' : isSubmitting && isCurrentActive ? 'thinking' : 'online'}
+                  className="mt-0.5"
+                />
 
                 <div className="flex-1 max-w-3xl space-y-2">
                   <div className="flex items-center justify-between">
@@ -211,7 +216,10 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
                       title={isThisQuestionSpeaking ? 'Stop speaking' : 'Listen to question'}
                     >
                       {isAudioLoading && speakingQuestionId === q.id ? (
-                        <Loader2 size={12} className="animate-spin text-[#008855]" />
+                        <div className="flex items-center gap-1.5">
+                          <AIThinkingOrb state="breathing" size={20} color="#008855" />
+                          <span className="text-[11px] font-medium text-[#008855]">Synthesizing...</span>
+                        </div>
                       ) : isThisQuestionSpeaking ? (
                         <>
                           <Volume2 size={13} className="text-[#008855] animate-pulse" />
@@ -270,9 +278,29 @@ export const InterviewChatView: React.FC<InterviewChatViewProps> = ({
                 </div>
               )}
 
-              {/* Active Input Box below current question */}
+              {/* Active Input Box & Evaluation Loading Card */}
               {isCurrentActive && (
-                <div className="pl-12 max-w-3xl pt-2">
+                <div className="pl-12 max-w-3xl pt-2 space-y-4">
+                  {isSubmitting && (
+                    <div className="rounded-2xl border border-[#D5E5DC] bg-white/95 backdrop-blur-sm p-4 sm:p-5 shadow-xs flex items-center gap-4 animate-in fade-in-50 duration-300">
+                      <AIThinkingOrb state="solving" size={84} color="#008855" dotSize={1.3} />
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-[#004D2F] font-mono uppercase tracking-wider">
+                            GraphRAG Evaluation Pipeline Active
+                          </span>
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#008855] animate-ping" />
+                        </div>
+                        <p className="text-sm font-semibold text-[#0A1A12]">
+                          CarrierGraph AI is evaluating your response...
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          Aligning explanation with knowledge graph concepts & calibrating objective rubric score
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <AnswerInputBox
                     onSubmit={onSubmitAnswer}
                     isLoading={isSubmitting}

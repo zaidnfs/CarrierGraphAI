@@ -11,6 +11,9 @@ import { ErrorRetryCard } from '@/components/shared/ErrorRetryCard';
 import { ReiconAtsDoc } from '@/components/icons/Reicon';
 import { KoboyoSparkle } from '@/components/icons/Koboyo';
 import { SkillGapRecommendations } from '@/components/skills/SkillGapRecommendations';
+import { AIThinkingOrb } from '@/components/shared/AIThinkingOrb';
+import { AILoadingState } from '@/components/shared/AILoadingState';
+import { AIBotAvatar } from '@/components/interviews/AIBotAvatar';
 import {
   FileText,
   Briefcase,
@@ -130,17 +133,20 @@ export const ResumeAnalyzerPage: React.FC = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[#EEF7F1] text-[#004D2F] border border-[#D6E8DD] font-mono mb-2">
-            <ReiconAtsDoc size={13} strokeWidth={2} />
-            <span>ATS Engine v2.3</span>
+        <div className="flex items-start gap-4">
+          <AIBotAvatar type="clover" size={46} shading="plastic" headphones={false} statusIndicator="online" className="mt-1 hidden sm:inline-flex" />
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[#EEF7F1] text-[#004D2F] border border-[#D6E8DD] font-mono mb-2">
+              <ReiconAtsDoc size={13} strokeWidth={2} />
+              <span>ATS Engine v2.3</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#0A1A12]">
+              Resume Analyzer & ATS Engine
+            </h1>
+            <p className="text-sm text-neutral-500 mt-1">
+              Compute job-fit calibration, uncover skill gaps, and export optimized ATS DOCX resumes
+            </p>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#0A1A12]">
-            Resume Analyzer & ATS Engine
-          </h1>
-          <p className="text-sm text-neutral-500 mt-1">
-            Compute job-fit calibration, uncover skill gaps, and export optimized ATS DOCX resumes
-          </p>
         </div>
 
         <button
@@ -174,10 +180,11 @@ export const ResumeAnalyzerPage: React.FC = () => {
 
       {/* Main Analyzer Workflow */}
       {isLoadingData ? (
-        <div className="p-12 text-center space-y-3">
-          <Loader2 className="h-8 w-8 animate-spin text-[#008855] mx-auto" />
-          <p className="text-sm text-neutral-500">Loading resumes and job data...</p>
-        </div>
+        <AILoadingState
+          state="searching"
+          title="Loading Resumes & Live Job Listings"
+          description="Connecting to knowledge graph data store to retrieve candidate profiles and active industry roles..."
+        />
       ) : error ? (
         <ErrorRetryCard message={error} onRetry={loadData} />
       ) : resumes.length === 0 ? (
@@ -272,10 +279,10 @@ export const ResumeAnalyzerPage: React.FC = () => {
                 className="w-full sm:w-auto h-11 px-6 rounded-full text-xs font-semibold text-white bg-[#008855] hover:bg-[#007347] active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 shadow-sm shadow-[#008855]/20 cursor-pointer"
               >
                 {isAnalyzing ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="flex items-center gap-2">
+                    <AIThinkingOrb state="searching" size={20} color="#FFFFFF" />
                     <span>Analyzing Fit...</span>
-                  </>
+                  </div>
                 ) : (
                   <>
                     <KoboyoSparkle size={14} strokeWidth={2.2} />
@@ -285,6 +292,25 @@ export const ResumeAnalyzerPage: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {/* Active AI Analysis Loading Stage Card */}
+          {isAnalyzing && (
+            <div className="p-8 rounded-2xl border border-[#D5E5DC] bg-white shadow-xs animate-in fade-in-50 duration-300">
+              <AILoadingState
+                state="searching"
+                size="md"
+                title="Calibrating Role Fit Against Knowledge Graph"
+                description="Parsing candidate skills, querying job listing embeddings, and identifying competency alignment..."
+                stages={[
+                  { label: 'Extracting candidate skills and experience entities' },
+                  { label: 'Computing vector distance against target job specifications' },
+                  { label: 'Formulating ATS compatibility rating and skill gap insights' },
+                ]}
+                activeStageIndex={1}
+                card={false}
+              />
+            </div>
+          )}
 
           {/* Analysis Results View */}
           {fitResult && (
@@ -350,10 +376,10 @@ export const ResumeAnalyzerPage: React.FC = () => {
                       className="shrink-0 h-10 px-5 rounded-full text-xs font-semibold text-white bg-[#008855] hover:bg-[#007347] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-[#008855]/20 disabled:opacity-50"
                     >
                       {isGeneratingAts ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          <span>Generating...</span>
-                        </>
+                        <div className="flex items-center gap-2">
+                          <AIThinkingOrb state="composing" size={20} color="#FFFFFF" />
+                          <span>Generating ATS DOCX...</span>
+                        </div>
                       ) : (
                         <>
                           <Download className="h-4 w-4" />
