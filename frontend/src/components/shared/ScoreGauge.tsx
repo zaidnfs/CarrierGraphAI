@@ -43,23 +43,23 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (animatedScore / 100) * circumference;
 
-  // Determine color and category label based on DESIGN.md thresholds
+  // Determine color and category label based on thresholds
   let strokeColor = '#EF4444'; // Low match (<40)
   let categoryLabel = 'Low Match';
-  let badgeStyle = 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30';
+  let badgeStyle = 'bg-red-50 text-red-700 border-red-200';
 
   if (score >= 80) {
-    strokeColor = '#00A264'; // Excellent match (>=80) - Jade Emerald
+    strokeColor = '#008855'; // Excellent match (>=80) - Jade Emerald
     categoryLabel = 'Excellent Match';
-    badgeStyle = 'bg-[rgba(0,136,85,0.12)] text-[#004D2F] dark:text-[rgba(76,214,129,1)] border-[rgba(0,162,100,0.35)]';
+    badgeStyle = 'bg-[#EEF7F1] text-[#004D2F] border-[#D6E8DD]';
   } else if (score >= 60) {
     strokeColor = '#0284C7'; // Good match (60-79) - Cyan/Teal
     categoryLabel = 'Good Match';
-    badgeStyle = 'bg-sky-500/10 text-sky-800 dark:text-sky-300 border-sky-500/30';
+    badgeStyle = 'bg-sky-50 text-sky-800 border-sky-200';
   } else if (score >= 40) {
     strokeColor = '#D97706'; // Partial match (40-59) - Amber
     categoryLabel = 'Partial Match';
-    badgeStyle = 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30';
+    badgeStyle = 'bg-amber-50 text-amber-800 border-amber-200';
   }
 
   return (
@@ -71,9 +71,8 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="currentColor"
+            stroke="#E5E7EB"
             strokeWidth={strokeWidth}
-            className="text-neutral-200 dark:text-white/10"
             fill="transparent"
           />
           {/* Animated score stroke */}
@@ -93,10 +92,10 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
 
         {/* Centered score number */}
         <div className="absolute flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold tracking-tight text-[#004D2F] dark:text-white font-mono">
+          <span className="text-3xl font-bold tracking-tight text-[#0A1A12] font-mono">
             {animatedScore}
           </span>
-          <span className="text-[10px] uppercase font-semibold text-neutral-500 dark:text-neutral-400 tracking-wider">
+          <span className="text-[10px] uppercase font-semibold text-neutral-400 tracking-wider">
             Fit Score
           </span>
         </div>

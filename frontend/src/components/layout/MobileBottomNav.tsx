@@ -5,14 +5,14 @@ import { ReiconTerminal, ReiconRadar, ReiconAtsDoc } from '@/components/icons/Re
 
 export const MobileBottomNav: React.FC = () => {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 dark:bg-[#060B08]/95 backdrop-blur-md border-t border-neutral-200 dark:border-[rgba(0,162,100,0.2)] z-40 px-6 flex items-center justify-around safe-bottom">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-[#E2E8E5] z-40 px-6 flex items-center justify-around safe-bottom shadow-lg shadow-black/[0.03]">
       <NavLink
         to="/"
         end
         className={({ isActive }) =>
           cn(
             'flex flex-col items-center justify-center py-1 px-3 text-[11px] font-medium transition-colors',
-            isActive ? 'text-[#004D2F] dark:text-[rgba(76,214,129,1)] font-bold' : 'text-neutral-500 dark:text-neutral-400'
+            isActive ? 'text-[#008855] font-bold' : 'text-neutral-500 hover:text-[#0A1A12]'
           )
         }
       >
@@ -25,7 +25,7 @@ export const MobileBottomNav: React.FC = () => {
         className={({ isActive }) =>
           cn(
             'flex flex-col items-center justify-center py-1 px-3 text-[11px] font-medium transition-colors',
-            isActive ? 'text-[#004D2F] dark:text-[rgba(76,214,129,1)] font-bold' : 'text-neutral-500 dark:text-neutral-400'
+            isActive ? 'text-[#008855] font-bold' : 'text-neutral-500 hover:text-[#0A1A12]'
           )
         }
       >
@@ -38,7 +38,7 @@ export const MobileBottomNav: React.FC = () => {
         className={({ isActive }) =>
           cn(
             'flex flex-col items-center justify-center py-1 px-3 text-[11px] font-medium transition-colors',
-            isActive ? 'text-[#004D2F] dark:text-[rgba(76,214,129,1)] font-bold' : 'text-neutral-500 dark:text-neutral-400'
+            isActive ? 'text-[#008855] font-bold' : 'text-neutral-500 hover:text-[#0A1A12]'
           )
         }
       >
