@@ -6,7 +6,10 @@ import { KoboyoBrain } from '@/components/icons/Koboyo';
 
 export const MobileBottomNav: React.FC = () => {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-[#E2E8E5] z-40 px-4 flex items-center justify-around safe-bottom shadow-lg shadow-black/[0.03]">
+    <nav
+      aria-label="Mobile navigation"
+      className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-[#E2E8E5] z-40 px-4 flex items-center justify-around safe-bottom shadow-lg shadow-black/[0.03]"
+    >
       <NavLink
         to="/"
         end

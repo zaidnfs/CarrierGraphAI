@@ -18,10 +18,13 @@ export const VoiceModeToggle: React.FC<VoiceModeToggleProps> = ({
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={voiceMode}
+      aria-label={voiceMode ? 'Voice Mode Active, click to turn off' : 'Voice Mode Off, click to turn on'}
       onClick={() => !disabled && onToggle(!voiceMode)}
       disabled={disabled}
       className={cn(
-        'group relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer select-none',
+        'group relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008855]',
         voiceMode
           ? 'bg-[#E6F4ED] text-[#008855] border-[#008855]/40 shadow-xs'
           : 'bg-white text-neutral-600 border-[#D5E5DC] hover:border-neutral-300 hover:text-neutral-900',

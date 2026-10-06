@@ -141,7 +141,8 @@ export const AnswerInputBox: React.FC<AnswerInputBoxProps> = ({
           <button
             type="button"
             onClick={() => setTranscribedBanner(false)}
-            className="text-neutral-400 hover:text-neutral-600 font-bold ml-2"
+            aria-label="Dismiss speech transcription notification"
+            className="text-neutral-400 hover:text-neutral-600 font-bold ml-2 cursor-pointer"
           >
             ×
           </button>
@@ -153,6 +154,8 @@ export const AnswerInputBox: React.FC<AnswerInputBoxProps> = ({
         {/* Input Area */}
         <textarea
           ref={textareaRef}
+          id="interview-answer-input"
+          aria-label="Your technical answer to this interview question"
           value={answer}
           onChange={(e) => {
             setAnswer(e.target.value);

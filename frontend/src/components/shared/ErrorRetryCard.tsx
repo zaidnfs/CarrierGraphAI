@@ -15,6 +15,8 @@ export const ErrorRetryCard: React.FC<ErrorRetryCardProps> = ({
 }) => {
   return (
     <div
+      role="alert"
+      aria-live="assertive"
       className={`p-6 rounded-xl border border-destructive/20 bg-destructive/5 text-center flex flex-col items-center justify-center space-y-3 ${className || ''}`}
     >
       <div className="h-10 w-10 rounded-full bg-destructive/10 text-destructive flex items-center justify-center">

@@ -11,6 +11,14 @@ export const AppLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex bg-[#F3F5F4] text-[#0A1A12] font-sans antialiased selection:bg-[#008855]/20 selection:text-[#004D2F]">
+      {/* Skip to Main Content Link for Keyboard Accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#008855] focus:text-white focus:font-medium focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white"
+      >
+        Skip to main content
+      </a>
+
       {/* Desktop & Tablet Sidebar */}
       <DesktopSidebar />
 
@@ -34,6 +42,7 @@ export const AppLayout: React.FC = () => {
             <button
               type="button"
               onClick={logout}
+              aria-label="Log out"
               className="h-8 w-8 rounded-lg flex items-center justify-center text-neutral-500 hover:text-red-600 hover:bg-red-50 transition-colors"
               title="Log out"
             >
@@ -43,7 +52,11 @@ export const AppLayout: React.FC = () => {
         </header>
 
         {/* Page Content Viewport */}
-        <main className="flex-1 p-4 md:p-8 max-w-[1240px] w-full mx-auto animate-in fade-in-50 duration-300">
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex-1 p-4 md:p-8 max-w-[1240px] w-full mx-auto animate-in fade-in-50 duration-300 focus:outline-none"
+        >
           <Outlet />
         </main>
       </div>

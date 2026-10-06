@@ -78,11 +78,20 @@ export const ResumeUploadZone: React.FC<ResumeUploadZoneProps> = ({ onUploadSucc
   return (
     <div className="space-y-3">
       <div
+        role="button"
+        tabIndex={0}
+        aria-label="Upload resume file dropzone. Supports PDF and DOCX documents up to 5 megabytes."
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`relative flex flex-col items-center justify-center p-8 sm:p-10 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-200 ${
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            fileInputRef.current?.click();
+          }
+        }}
+        className={`relative flex flex-col items-center justify-center p-8 sm:p-10 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#008855] ${
           isDragging
             ? 'border-[#008855] bg-[#EEF7F1] scale-[1.01]'
             : 'border-[#D6E8DD] bg-[#F8FAF8] hover:bg-[#EEF7F1]/60 hover:border-[#008855]'
@@ -92,6 +101,7 @@ export const ResumeUploadZone: React.FC<ResumeUploadZoneProps> = ({ onUploadSucc
           ref={fileInputRef}
           type="file"
           accept=".pdf,.docx"
+          aria-label="Resume file input (.pdf, .docx)"
           onChange={handleInputChange}
           className="hidden"
           disabled={isUploading}
@@ -125,7 +135,11 @@ export const ResumeUploadZone: React.FC<ResumeUploadZoneProps> = ({ onUploadSucc
       </div>
 
       {uploadError && (
-        <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2">
+        <div
+          role="alert"
+          aria-live="polite"
+          className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2"
+        >
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-600" />
           <span>{uploadError}</span>
         </div>

@@ -40,7 +40,11 @@ export const AILoadingState: React.FC<AILoadingStateProps> = ({
     size === 'sm' ? 44 : size === 'lg' ? 110 : size === 'xl' ? 130 : 80;
 
   const content = (
-    <div className={cn('flex flex-col items-center text-center space-y-4 max-w-lg mx-auto', className)}>
+    <div
+      role="status"
+      aria-live="polite"
+      className={cn('flex flex-col items-center text-center space-y-4 max-w-lg mx-auto', className)}
+    >
       <AIThinkingOrb
         state={state}
         size={orbSize}

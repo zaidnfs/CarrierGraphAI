@@ -107,6 +107,7 @@ export const DesktopSidebar: React.FC = () => {
             <button
               type="button"
               onClick={togglePin}
+              aria-label={isPinned ? 'Unpin sidebar (hover-only mode)' : 'Pin sidebar permanently'}
               className="h-7 w-7 rounded-lg text-neutral-400 hover:text-[#004D2F] hover:bg-[#E1EFE7] flex items-center justify-center transition-colors cursor-pointer"
               title={isPinned ? 'Unpin sidebar (hover-only mode)' : 'Pin sidebar permanently'}
             >
@@ -241,6 +242,7 @@ export const DesktopSidebar: React.FC = () => {
               <button
                 type="button"
                 onClick={logout}
+                aria-label="Log out of account"
                 title="Log out"
                 className="h-7 w-7 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition-colors cursor-pointer shrink-0"
               >
