@@ -249,11 +249,17 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   }}
                   className="w-full h-11 px-3 rounded-xl border border-neutral-200 bg-[#F8FAF8] text-sm text-[#111827] focus:outline-none focus:bg-white focus:border-[#008855] cursor-pointer shadow-xs"
                 >
-                  {jobs.map((job) => (
-                    <option key={job.id} value={job.id}>
-                      {job.title} — {job.company} ({job.location_city || 'India'})
+                  {jobs.length === 0 ? (
+                    <option value="" disabled>
+                      No job postings available
                     </option>
-                  ))}
+                  ) : (
+                    jobs.map((job) => (
+                      <option key={job.id} value={job.id}>
+                        {job.title} — {job.company} ({job.location_city || 'India'})
+                      </option>
+                    ))
+                  )}
                 </select>
 
                 {selectedJob && (
